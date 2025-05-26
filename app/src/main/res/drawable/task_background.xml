@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/priority_high">
+        <shape>
+            <gradient
+                android:angle="0"
+                android:endColor="#FF5C87"
+                android:startColor="#FF8A8A"
+                android:type="linear" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <item android:id="@+id/priority_medium">
+        <shape>
+            <solid android:color="#FCD02F" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <item android:id="@+id/priority_low">
+        <shape>
+            <solid android:color="#80C783" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</selector>
