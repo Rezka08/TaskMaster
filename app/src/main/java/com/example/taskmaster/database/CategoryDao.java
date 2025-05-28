@@ -1,0 +1,73 @@
+package com.example.taskmaster.database;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import com.example.taskmaster.model.Category;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CategoryDao {
+    private DatabaseHelper dbHelper;
+
+    public CategoryDao(DatabaseHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    public long insert(Category category) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(DatabaseHelper.COLUMN_CATEGORY_NAME, category.getName());
+        values.put(DatabaseHelper.COLUMN_CATEGORY_COLOR, category.getColor());
+
+        long id = db.insert(DatabaseHelper.TABLE_CATEGORIES, null, values);
+        db.close();
+        return id;
+    }
+
+    public List<Category> getAllCategories() {
+        List<Category> categories = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_CATEGORIES +
+                " ORDER BY " + DatabaseHelper.COLUMN_CATEGORY_NAME + " ASC";
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Category category = cursorToCategory(cursor);
+                categories.add(category);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return categories;
+    }
+
+    public Category getCategoryById(int id) {
+        String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_CATEGORIES +
+                " WHERE " + DatabaseHelper.COLUMN_CATEGORY_ID + " = ?";
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(id)});
+
+        Category category = null;
+        if (cursor.moveToFirst()) {
+            category = cursorToCategory(cursor);
+        }
+
+        cursor.close();
+        db.close();
+        return category;
+    }
+
+    private Category cursorToCategory(Cursor cursor) {
+        return new Category(
+                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_COLOR))
+        );
+    }
+}
