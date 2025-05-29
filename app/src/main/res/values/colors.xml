@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary Colors -->
+    <color name="purple_primary">#6C63FF</color>
+    <color name="light_purple_bg">#F8F8FF</color>
+    <color name="dark_gray_bg">#565656</color>
+
+    <!-- Monthly Preview Colors -->
+    <color name="done_green">#4ECDC4</color>
+    <color name="upcoming_blue">#45B7D1</color>
+    <color name="progress_orange">#FFA726</color>
+
+    <!-- Priority Colors -->
+    <color name="priority_high">#FF6B6B</color>
+    <color name="priority_medium">#FFD93D</color>
+    <color name="priority_low">#6BCF7F</color>
+
+    <!-- Text Colors -->
+    <color name="text_dark">#2C3E50</color>
+    <color name="text_gray">#7F8C8D</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_80">#CCFFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+
+    <!-- Widget Colors -->
+    <color name="widget_gradient_start">#667eea</color>
+    <color name="widget_gradient_end">#764ba2</color>
+
+    <!-- Chip Colors -->
+    <color name="chip_unselected">#E8E8F5</color>
+
+    <!-- Bottom Navigation -->
+    <color name="bottom_nav_selected">#6C63FF</color>
+    <color name="bottom_nav_unselected">#9E9E9E</color>
 </resources>
