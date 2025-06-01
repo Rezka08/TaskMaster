@@ -14,6 +14,15 @@ import java.util.List;
 
 public class NotificationTaskAdapter extends RecyclerView.Adapter<NotificationTaskAdapter.NotificationTaskViewHolder> {
     private List<Task> tasks = new ArrayList<>();
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Task task);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
 
     @NonNull
     @Override
@@ -35,7 +44,7 @@ public class NotificationTaskAdapter extends RecyclerView.Adapter<NotificationTa
     }
 
     public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+        this.tasks = tasks != null ? tasks : new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -46,21 +55,30 @@ public class NotificationTaskAdapter extends RecyclerView.Adapter<NotificationTa
             super(itemView);
             tvTaskTitle = itemView.findViewById(R.id.tv_task_title);
             tvTaskTime = itemView.findViewById(R.id.tv_task_time);
+
+            // Set click listener
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    onItemClickListener.onItemClick(tasks.get(getAdapterPosition()));
+                }
+            });
         }
 
         public void bind(Task task) {
             tvTaskTitle.setText(task.getTitle());
 
             // Calculate days left
-            long daysLeft = DateUtils.getDaysDifference(task.getDate());
-            if (daysLeft == 0) {
-                tvTaskTime.setText("Today");
-            } else if (daysLeft == 1) {
-                tvTaskTime.setText("Tomorrow");
-            } else if (daysLeft > 0) {
-                tvTaskTime.setText(daysLeft + " Days left");
+            long daysDiff = DateUtils.getDaysDifference(task.getDate());
+            if (daysDiff == 0) {
+                tvTaskTime.setText("Today • " + task.getStartTime());
+            } else if (daysDiff == 1) {
+                tvTaskTime.setText("Tomorrow • " + task.getStartTime());
+            } else if (daysDiff > 0) {
+                tvTaskTime.setText(daysDiff + " Days left");
+            } else if (daysDiff == -1) {
+                tvTaskTime.setText("Yesterday");
             } else {
-                tvTaskTime.setText(Math.abs(daysLeft) + " Days ago");
+                tvTaskTime.setText(Math.abs(daysDiff) + " Days ago");
             }
         }
     }

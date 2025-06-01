@@ -26,116 +26,146 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
+    <!-- Current Date -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="May, 2025"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:layout_marginBottom="20dp" />
+        android:text="Today"
+        android:textSize="14sp"
+        android:textColor="@color/white_80"
+        android:layout_marginBottom="16dp" />
 
-    <!-- Task Cards -->
+    <!-- Task List Container -->
     <LinearLayout
+        android:id="@+id/widget_task_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <!-- Task 1 - High Priority -->
-        <FrameLayout
+        <!-- Task 1 -->
+        <LinearLayout
+            android:id="@+id/widget_task_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/priority_high_background">
+            android:orientation="horizontal"
+            android:background="@drawable/widget_task_bg"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_task_white"
+                android:layout_marginEnd="12dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_task_white"
-                    android:layout_marginEnd="12dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/widget_task_title_1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Presentasi Mobile"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2 Hours Left"
-                        android:textSize="14sp"
-                        android:textColor="@color/white_80" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_more_vert_white" />
+                <TextView
+                    android:id="@+id/widget_task_time_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/white_80" />
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
 
-        <!-- Task 2 - Medium Priority -->
-        <FrameLayout
+        <!-- Task 2 -->
+        <LinearLayout
+            android:id="@+id/widget_task_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/priority_medium_background">
+            android:orientation="horizontal"
+            android:background="@drawable/widget_task_bg"
+            android:padding="12dp"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_task_white"
+                android:layout_marginEnd="12dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_task_white"
-                    android:layout_marginEnd="12dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/widget_task_title_2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Transformasi Digital"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2 Days Left"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_gray" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_more_vert" />
+                <TextView
+                    android:id="@+id/widget_task_time_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/white_80" />
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
+
     </LinearLayout>
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/widget_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📋"
+            android:textSize="32sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/widget_empty_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No tasks today"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/widget_empty_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap to add a new task"
+            android:textSize="12sp"
+            android:textColor="@color/white_80"
+            android:gravity="center" />
+
+    </LinearLayout>
+
 </LinearLayout>

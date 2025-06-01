@@ -15,52 +15,72 @@ public class CategoryDao {
     }
 
     public long insert(Category category) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        SQLiteDatabase db = null;
+        try {
+            db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
 
-        values.put(DatabaseHelper.COLUMN_CATEGORY_NAME, category.getName());
-        values.put(DatabaseHelper.COLUMN_CATEGORY_COLOR, category.getColor());
+            values.put(DatabaseHelper.COLUMN_CATEGORY_NAME, category.getName());
+            values.put(DatabaseHelper.COLUMN_CATEGORY_COLOR, category.getColor());
 
-        long id = db.insert(DatabaseHelper.TABLE_CATEGORIES, null, values);
-        db.close();
-        return id;
+            return db.insert(DatabaseHelper.TABLE_CATEGORIES, null, values);
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
     }
 
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_CATEGORIES +
-                " ORDER BY " + DatabaseHelper.COLUMN_CATEGORY_NAME + " ASC";
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_CATEGORIES +
+                    " ORDER BY " + DatabaseHelper.COLUMN_CATEGORY_NAME + " ASC";
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+            db = dbHelper.getReadableDatabase();
+            cursor = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst()) {
-            do {
-                Category category = cursorToCategory(cursor);
-                categories.add(category);
-            } while (cursor.moveToNext());
+            if (cursor.moveToFirst()) {
+                do {
+                    Category category = cursorToCategory(cursor);
+                    categories.add(category);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
         }
-
-        cursor.close();
-        db.close();
         return categories;
     }
 
     public Category getCategoryById(int id) {
-        String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_CATEGORIES +
-                " WHERE " + DatabaseHelper.COLUMN_CATEGORY_ID + " = ?";
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_CATEGORIES +
+                    " WHERE " + DatabaseHelper.COLUMN_CATEGORY_ID + " = ?";
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(id)});
+            db = dbHelper.getReadableDatabase();
+            cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(id)});
 
-        Category category = null;
-        if (cursor.moveToFirst()) {
-            category = cursorToCategory(cursor);
+            if (cursor.moveToFirst()) {
+                return cursorToCategory(cursor);
+            }
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
         }
-
-        cursor.close();
-        db.close();
-        return category;
     }
 
     private Category cursorToCategory(Cursor cursor) {

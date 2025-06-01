@@ -29,7 +29,8 @@
                 android:layout_marginEnd="16dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless" />
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:visibility="gone" />
 
             <!-- Title -->
             <TextView
@@ -65,10 +66,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="UI/UX Design"
+                android:hint="Enter task name"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
+                android:textColorHint="@color/white_70"
                 android:padding="0dp"
                 android:layout_marginBottom="4dp" />
 
@@ -99,14 +101,15 @@
                 android:id="@+id/tv_task_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="May 30, 2025"
+                android:text="Select date"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:padding="0dp"
                 android:layout_marginBottom="4dp"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground" />
 
             <View
                 android:layout_width="match_parent"
@@ -155,10 +158,11 @@
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:text="01:22 pm"
+                        android:text="Select time"
                         android:textColor="@color/text_dark"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:background="?attr/selectableItemBackground" />
 
                 </LinearLayout>
 
@@ -184,10 +188,11 @@
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:text="03:20 pm"
+                        android:text="Select time"
                         android:textColor="@color/text_dark"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:background="?attr/selectableItemBackground" />
 
                 </LinearLayout>
 
@@ -214,9 +219,10 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:gravity="top"
+                    android:hint="Enter task description (optional)"
                     android:minLines="3"
-                    android:text="Lorem ipsum dolor sit amet, er adipiscing elit, sed dianummy nibh euismod dolor sit amet, er adipiscing elit, sed dianummy nibh euismod."
                     android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_gray"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -243,68 +249,10 @@
                     android:layout_height="wrap_content"
                     app:chipSpacingHorizontal="8dp"
                     app:chipSpacingVertical="8dp"
-                    app:singleLine="false">
+                    app:singleLine="false"
+                    app:singleSelection="true">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_design"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:checked="true"
-                        android:text="Design"
-                        android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/purple_primary"
-                        app:chipCornerRadius="20dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_meeting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:text="Meeting"
-                        android:textColor="@color/text_dark"
-                        app:chipBackgroundColor="@color/chip_unselected"
-                        app:chipCornerRadius="20dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_coding"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:text="Coding"
-                        android:textColor="@color/text_dark"
-                        app:chipBackgroundColor="@color/chip_unselected"
-                        app:chipCornerRadius="20dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_bde"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:text="BDE"
-                        android:textColor="@color/text_dark"
-                        app:chipBackgroundColor="@color/chip_unselected"
-                        app:chipCornerRadius="20dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_testing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:text="Testing"
-                        android:textColor="@color/text_dark"
-                        app:chipBackgroundColor="@color/chip_unselected"
-                        app:chipCornerRadius="20dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_add_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:text="+ Add Category"
-                        android:textColor="@color/text_dark"
-                        app:chipBackgroundColor="@color/chip_unselected"
-                        app:chipCornerRadius="20dp" />
+                    <!-- Categories will be loaded dynamically -->
 
                 </com.google.android.material.chip.ChipGroup>
 

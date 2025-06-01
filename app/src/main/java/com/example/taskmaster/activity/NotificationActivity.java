@@ -1,5 +1,6 @@
 package com.example.taskmaster.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,6 +48,12 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         notificationTaskAdapter = new NotificationTaskAdapter();
+        notificationTaskAdapter.setOnItemClickListener(task -> {
+            // Navigate to Task Detail
+            Intent intent = new Intent(this, TaskDetailActivity.class);
+            intent.putExtra("task_id", task.getId());
+            startActivityForResult(intent, 1001); // Use startActivityForResult to detect changes
+        });
         rvNotificationTasks.setLayoutManager(new LinearLayoutManager(this));
         rvNotificationTasks.setAdapter(notificationTaskAdapter);
     }
@@ -93,14 +100,20 @@ public class NotificationActivity extends AppCompatActivity {
         taskViewModel.getUpcomingTasks(DateUtils.getCurrentDate(), new DatabaseListCallback<Task>() {
             @Override
             public void onSuccess(List<Task> tasks) {
-                notificationTaskAdapter.setTasks(tasks);
-                tvTaskCount.setText(tasks.size() + " Task Upcoming");
-                toggleEmptyState(tasks.isEmpty());
+                runOnUiThread(() -> {
+                    notificationTaskAdapter.setTasks(tasks);
+                    tvTaskCount.setText(tasks.size() + " Task" + (tasks.size() == 1 ? "" : "s") + " Upcoming");
+                    toggleEmptyState(tasks.isEmpty());
+                });
             }
 
             @Override
             public void onError(String error) {
-                // Handle error
+                runOnUiThread(() -> {
+                    notificationTaskAdapter.setTasks(null);
+                    tvTaskCount.setText("0 Tasks Upcoming");
+                    toggleEmptyState(true);
+                });
             }
         });
     }
@@ -109,14 +122,20 @@ public class NotificationActivity extends AppCompatActivity {
         taskViewModel.getInProgressTasks(DateUtils.getCurrentDate(), new DatabaseListCallback<Task>() {
             @Override
             public void onSuccess(List<Task> tasks) {
-                notificationTaskAdapter.setTasks(tasks);
-                tvTaskCount.setText(tasks.size() + " Task In Progress");
-                toggleEmptyState(tasks.isEmpty());
+                runOnUiThread(() -> {
+                    notificationTaskAdapter.setTasks(tasks);
+                    tvTaskCount.setText(tasks.size() + " Task" + (tasks.size() == 1 ? "" : "s") + " In Progress");
+                    toggleEmptyState(tasks.isEmpty());
+                });
             }
 
             @Override
             public void onError(String error) {
-                // Handle error
+                runOnUiThread(() -> {
+                    notificationTaskAdapter.setTasks(null);
+                    tvTaskCount.setText("0 Tasks In Progress");
+                    toggleEmptyState(true);
+                });
             }
         });
     }
@@ -125,14 +144,20 @@ public class NotificationActivity extends AppCompatActivity {
         taskViewModel.getCompletedTasks(new DatabaseListCallback<Task>() {
             @Override
             public void onSuccess(List<Task> tasks) {
-                notificationTaskAdapter.setTasks(tasks);
-                tvTaskCount.setText(tasks.size() + " Task Completed");
-                toggleEmptyState(tasks.isEmpty());
+                runOnUiThread(() -> {
+                    notificationTaskAdapter.setTasks(tasks);
+                    tvTaskCount.setText(tasks.size() + " Task" + (tasks.size() == 1 ? "" : "s") + " Completed");
+                    toggleEmptyState(tasks.isEmpty());
+                });
             }
 
             @Override
             public void onError(String error) {
-                // Handle error
+                runOnUiThread(() -> {
+                    notificationTaskAdapter.setTasks(null);
+                    tvTaskCount.setText("0 Tasks Completed");
+                    toggleEmptyState(true);
+                });
             }
         });
     }
@@ -140,5 +165,51 @@ public class NotificationActivity extends AppCompatActivity {
     private void toggleEmptyState(boolean isEmpty) {
         findViewById(R.id.layout_empty_state).setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         rvNotificationTasks.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Refresh data when returning from TaskDetailActivity if data changed
+        if (requestCode == 1001 && resultCode == RESULT_OK) {
+            if (data != null && data.getBooleanExtra("data_changed", false)) {
+                // Refresh current tab
+                TabLayout.Tab selectedTab = tabLayoutFilter.getTabAt(tabLayoutFilter.getSelectedTabPosition());
+                if (selectedTab != null) {
+                    switch (selectedTab.getPosition()) {
+                        case 0:
+                            loadUpcomingTasks();
+                            break;
+                        case 1:
+                            loadInProgressTasks();
+                            break;
+                        case 2:
+                            loadCompletedTasks();
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh current tab
+        TabLayout.Tab selectedTab = tabLayoutFilter.getTabAt(tabLayoutFilter.getSelectedTabPosition());
+        if (selectedTab != null) {
+            switch (selectedTab.getPosition()) {
+                case 0:
+                    loadUpcomingTasks();
+                    break;
+                case 1:
+                    loadInProgressTasks();
+                    break;
+                case 2:
+                    loadCompletedTasks();
+                    break;
+            }
+        }
     }
 }

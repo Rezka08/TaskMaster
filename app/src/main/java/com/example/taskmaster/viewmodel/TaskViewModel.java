@@ -53,6 +53,23 @@ public class TaskViewModel extends AndroidViewModel {
         repository.getTodayTasksForWidget(currentDate, callback);
     }
 
+    // Count methods for Monthly Preview
+    public void getCompletedTasksCount(DatabaseCountCallback callback) {
+        repository.getCompletedTasksCount(callback);
+    }
+
+    public void getUpcomingTasksCount(String currentDate, DatabaseCountCallback callback) {
+        repository.getUpcomingTasksCount(currentDate, callback);
+    }
+
+    public void getInProgressTasksCount(String currentDate, DatabaseCountCallback callback) {
+        repository.getInProgressTasksCount(currentDate, callback);
+    }
+
+    public void getTaskById(int taskId, DatabaseCallback<Task> callback) {
+        repository.getTaskById(taskId, callback);
+    }
+
     public void insert(Task task, DatabaseCallback<Long> callback) {
         // Calculate priority automatically
         int priority = PriorityUtils.calculatePriority(task.getDate());

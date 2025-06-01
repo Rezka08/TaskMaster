@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,7 +19,6 @@ import com.example.taskmaster.callback.DatabaseListCallback;
 import com.example.taskmaster.model.Category;
 import com.example.taskmaster.model.Task;
 import com.example.taskmaster.utils.DateUtils;
-import com.example.taskmaster.utils.PriorityUtils;
 import com.example.taskmaster.viewmodel.TaskViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -77,13 +77,21 @@ public class AddTaskFragment extends Fragment {
         taskViewModel.getAllCategories(new DatabaseListCallback<Category>() {
             @Override
             public void onSuccess(List<Category> categoryList) {
-                categories = categoryList;
-                setupCategoryChips();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        categories = categoryList;
+                        setupCategoryChips();
+                    });
+                }
             }
 
             @Override
             public void onError(String error) {
-                // Handle error
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error loading categories: " + error, Toast.LENGTH_SHORT).show();
+                    });
+                }
             }
         });
     }
@@ -119,10 +127,25 @@ public class AddTaskFragment extends Fragment {
     }
 
     private void setDefaultValues() {
+        // Clear all fields first
+        etTaskName.setText("");
+        etDescription.setText("");
+
+        // Set current date and time as defaults
         selectedDate = DateUtils.getCurrentDate();
         selectedStartTime = DateUtils.getCurrentTime();
-        selectedEndTime = DateUtils.getCurrentTime();
 
+        // Set end time 1 hour later
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        selectedEndTime = String.format("%02d:%02d",
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE));
+
+        updateTimeDisplays();
+    }
+
+    private void updateTimeDisplays() {
         tvTaskDate.setText(selectedDate);
         tvStartTime.setText(selectedStartTime);
         tvEndTime.setText(selectedEndTime);
@@ -138,6 +161,9 @@ public class AddTaskFragment extends Fragment {
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
+
+        // Don't allow past dates
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         datePickerDialog.show();
     }
 
@@ -147,6 +173,17 @@ public class AddTaskFragment extends Fragment {
                 (view, hourOfDay, minute) -> {
                     selectedStartTime = String.format("%02d:%02d", hourOfDay, minute);
                     tvStartTime.setText(selectedStartTime);
+
+                    // Auto-set end time to 1 hour later
+                    Calendar endCalendar = Calendar.getInstance();
+                    endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    endCalendar.set(Calendar.MINUTE, minute);
+                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+
+                    selectedEndTime = String.format("%02d:%02d",
+                            endCalendar.get(Calendar.HOUR_OF_DAY),
+                            endCalendar.get(Calendar.MINUTE));
+                    tvEndTime.setText(selectedEndTime);
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE),
@@ -172,11 +209,19 @@ public class AddTaskFragment extends Fragment {
         String description = etDescription.getText().toString().trim();
 
         if (title.isEmpty()) {
-            etTaskName.setError("Nama tugas tidak boleh kosong");
+            etTaskName.setError("Task name cannot be empty");
+            etTaskName.requestFocus();
             return;
         }
 
         if (selectedDate.isEmpty() || selectedStartTime.isEmpty() || selectedEndTime.isEmpty()) {
+            Toast.makeText(getContext(), "Please select date and time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if end time is after start time
+        if (!isEndTimeAfterStartTime()) {
+            Toast.makeText(getContext(), "End time must be after start time", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -186,13 +231,27 @@ public class AddTaskFragment extends Fragment {
             taskViewModel.insert(newTask, new DatabaseCallback<Long>() {
                 @Override
                 public void onSuccess(Long result) {
-                    clearForm();
-                    // Navigate back or show success message
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Task created successfully", Toast.LENGTH_SHORT).show();
+                            clearForm();
+
+                            // Notify MainActivity about data change
+                            if (getActivity() instanceof MainActivity) {
+                                ((MainActivity) getActivity()).onDataChanged();
+                                ((MainActivity) getActivity()).navigateToHome();
+                            }
+                        });
+                    }
                 }
 
                 @Override
                 public void onError(String error) {
-                    // Handle error
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Error creating task: " + error, Toast.LENGTH_SHORT).show();
+                        });
+                    }
                 }
             });
         } else {
@@ -207,15 +266,45 @@ public class AddTaskFragment extends Fragment {
             taskViewModel.update(editingTask, new DatabaseCallback<Integer>() {
                 @Override
                 public void onSuccess(Integer result) {
-                    clearForm();
-                    // Navigate back or show success message
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Task updated successfully", Toast.LENGTH_SHORT).show();
+                            clearForm();
+
+                            // Notify MainActivity about data change
+                            if (getActivity() instanceof MainActivity) {
+                                ((MainActivity) getActivity()).onDataChanged();
+                                ((MainActivity) getActivity()).navigateToHome();
+                            }
+                        });
+                    }
                 }
 
                 @Override
                 public void onError(String error) {
-                    // Handle error
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Error updating task: " + error, Toast.LENGTH_SHORT).show();
+                        });
+                    }
                 }
             });
+        }
+    }
+
+    private boolean isEndTimeAfterStartTime() {
+        try {
+            String[] startParts = selectedStartTime.split(":");
+            String[] endParts = selectedEndTime.split(":");
+
+            int startHour = Integer.parseInt(startParts[0]);
+            int startMinute = Integer.parseInt(startParts[1]);
+            int endHour = Integer.parseInt(endParts[0]);
+            int endMinute = Integer.parseInt(endParts[1]);
+
+            return (endHour > startHour) || (endHour == startHour && endMinute > startMinute);
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -225,6 +314,13 @@ public class AddTaskFragment extends Fragment {
         setDefaultValues();
         editingTask = null;
         btnCreateTask.setText("Create Task");
+        selectedCategoryId = categories.size() > 0 ? categories.get(0).getId() : 1;
+
+        // Reset chip selection
+        if (chipGroupCategory.getChildCount() > 0) {
+            chipGroupCategory.clearCheck();
+            ((Chip) chipGroupCategory.getChildAt(0)).setChecked(true);
+        }
     }
 
     public void setEditingTask(Task task) {
@@ -237,11 +333,29 @@ public class AddTaskFragment extends Fragment {
             selectedEndTime = task.getEndTime();
             selectedCategoryId = task.getCategoryId();
 
-            tvTaskDate.setText(selectedDate);
-            tvStartTime.setText(selectedStartTime);
-            tvEndTime.setText(selectedEndTime);
-
+            updateTimeDisplays();
             btnCreateTask.setText("Update Task");
+
+            // Update chip selection
+            for (int i = 0; i < chipGroupCategory.getChildCount(); i++) {
+                Chip chip = (Chip) chipGroupCategory.getChildAt(i);
+                chip.setChecked(chip.getId() == selectedCategoryId);
+            }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (editingTask == null) {
+            // Only clear form if not editing
+            clearForm();
+        }
+    }
+
+    // Add method to MainActivity to navigate to home
+    public interface MainActivity {
+        void navigateToHome();
+        void onDataChanged();
     }
 }

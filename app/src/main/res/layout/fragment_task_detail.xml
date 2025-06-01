@@ -42,6 +42,17 @@
                 android:textColor="@color/white"
                 android:gravity="center" />
 
+            <!-- Delete Button -->
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_delete_white"
+                android:layout_marginStart="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
         </LinearLayout>
 
         <!-- Task Name -->
@@ -64,7 +75,7 @@
                 android:id="@+id/tv_task_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="UI/UX Design"
+                android:text=""
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -97,7 +108,7 @@
                 android:id="@+id/tv_task_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="May 30, 2025"
+                android:text=""
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -148,7 +159,7 @@
                         android:id="@+id/tv_start_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="01:22 pm"
+                        android:text=""
                         android:textColor="@color/text_dark"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -175,7 +186,7 @@
                         android:id="@+id/tv_end_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="03:20 pm"
+                        android:text=""
                         android:textColor="@color/text_dark"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -203,7 +214,7 @@
                     android:id="@+id/tv_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lorem ipsum dolor sit amet, er adipiscing elit, sed dianummy nibh euismod dolor sit amet, er adipiscing elit, sed dianummy nibh euismod."
+                    android:text=""
                     android:textColor="@color/text_dark"
                     android:textSize="16sp" />
 
@@ -228,7 +239,7 @@
                     android:id="@+id/tv_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Design"
+                    android:text=""
                     android:textColor="@color/text_dark"
                     android:textSize="18sp"
                     android:textStyle="bold" />

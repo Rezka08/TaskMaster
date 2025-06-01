@@ -15,7 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TaskMaster"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+
+        <!-- Main Activity -->
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"
@@ -38,6 +41,13 @@
             android:exported="false"
             android:theme="@style/Theme.TaskMaster.NoActionBar" />
 
+        <!-- Search Activity -->
+        <activity
+            android:name=".activity.SearchActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TaskMaster.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
         <!-- Widget Provider -->
         <receiver
             android:name=".widget.TaskWidgetProvider"
@@ -51,6 +61,5 @@
         </receiver>
 
     </application>
-
 
 </manifest>

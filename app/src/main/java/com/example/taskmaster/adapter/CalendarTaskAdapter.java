@@ -17,6 +17,15 @@ import java.util.List;
 
 public class CalendarTaskAdapter extends RecyclerView.Adapter<CalendarTaskAdapter.CalendarTaskViewHolder> {
     private List<Task> tasks = new ArrayList<>();
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Task task);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
 
     @NonNull
     @Override
@@ -38,8 +47,11 @@ public class CalendarTaskAdapter extends RecyclerView.Adapter<CalendarTaskAdapte
     }
 
     public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+        this.tasks = tasks != null ? tasks : new ArrayList<>();
         notifyDataSetChanged();
+
+        // Show/hide empty state in parent if needed
+        // This can be handled by the fragment
     }
 
     class CalendarTaskViewHolder extends RecyclerView.ViewHolder {
@@ -54,26 +66,62 @@ public class CalendarTaskAdapter extends RecyclerView.Adapter<CalendarTaskAdapte
             ivTask = itemView.findViewById(R.id.iv_task);
             ivMoreVert = itemView.findViewById(R.id.iv_more_vert);
             cvTaskItem = itemView.findViewById(R.id.cv_task_item);
+
+            // Set click listener for entire item
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    onItemClickListener.onItemClick(tasks.get(getAdapterPosition()));
+                }
+            });
+
+            // Set click listener for more options
+            ivMoreVert.setOnClickListener(v -> {
+                // Can be used for showing popup menu with edit/delete options
+                if (onItemClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    onItemClickListener.onItemClick(tasks.get(getAdapterPosition()));
+                }
+            });
         }
 
         public void bind(Task task) {
             tvTaskTitle.setText(task.getTitle());
 
-            // Calculate time left
-            long daysLeft = DateUtils.getDaysDifference(task.getDate());
-            if (daysLeft == 0) {
-                tvTaskTime.setText("Today");
-            } else if (daysLeft == 1) {
+            // Calculate time display
+            long daysDiff = DateUtils.getDaysDifference(task.getDate());
+            if (daysDiff == 0) {
+                // Check if task is in progress (today's date)
+                tvTaskTime.setText("Today - " + task.getStartTime());
+            } else if (daysDiff == 1) {
                 tvTaskTime.setText("Tomorrow");
-            } else if (daysLeft > 0) {
-                tvTaskTime.setText(daysLeft + " Hours Left");
+            } else if (daysDiff > 0) {
+                if (daysDiff < 7) {
+                    tvTaskTime.setText(daysDiff + " Days Left");
+                } else {
+                    long hoursLeft = daysDiff * 24;
+                    tvTaskTime.setText(hoursLeft + " Hours Left");
+                }
+            } else if (daysDiff == -1) {
+                tvTaskTime.setText("Yesterday");
             } else {
-                tvTaskTime.setText(Math.abs(daysLeft) + " Days ago");
+                tvTaskTime.setText(Math.abs(daysDiff) + " Days ago");
             }
 
             // Set background color based on priority
             int priorityColor = PriorityUtils.getPriorityColor(task.getPriority());
             cvTaskItem.setCardBackgroundColor(priorityColor);
+
+            // Set text colors based on priority
+            if (task.getPriority() == PriorityUtils.PRIORITY_HIGH) {
+                tvTaskTitle.setTextColor(android.graphics.Color.WHITE);
+                tvTaskTime.setTextColor(android.graphics.Color.parseColor("#CCFFFFFF"));
+                ivTask.setColorFilter(android.graphics.Color.WHITE);
+                ivMoreVert.setColorFilter(android.graphics.Color.WHITE);
+            } else {
+                tvTaskTitle.setTextColor(android.graphics.Color.parseColor("#2C3E50"));
+                tvTaskTime.setTextColor(android.graphics.Color.parseColor("#7F8C8D"));
+                ivTask.setColorFilter(android.graphics.Color.parseColor("#2C3E50"));
+                ivMoreVert.setColorFilter(android.graphics.Color.parseColor("#2C3E50"));
+            }
         }
     }
 }

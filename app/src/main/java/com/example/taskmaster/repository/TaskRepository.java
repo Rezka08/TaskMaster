@@ -114,6 +114,51 @@ public class TaskRepository {
         });
     }
 
+    // Count methods for Monthly Preview
+    public void getCompletedTasksCount(DatabaseCountCallback callback) {
+        executor.execute(() -> {
+            try {
+                Integer count = taskDao.getCompletedTasksCount();
+                callback.onSuccess(count);
+            } catch (Exception e) {
+                callback.onError(e.getMessage());
+            }
+        });
+    }
+
+    public void getUpcomingTasksCount(String currentDate, DatabaseCountCallback callback) {
+        executor.execute(() -> {
+            try {
+                Integer count = taskDao.getUpcomingTasksCount(currentDate);
+                callback.onSuccess(count);
+            } catch (Exception e) {
+                callback.onError(e.getMessage());
+            }
+        });
+    }
+
+    public void getInProgressTasksCount(String currentDate, DatabaseCountCallback callback) {
+        executor.execute(() -> {
+            try {
+                Integer count = taskDao.getInProgressTasksCount(currentDate);
+                callback.onSuccess(count);
+            } catch (Exception e) {
+                callback.onError(e.getMessage());
+            }
+        });
+    }
+
+    public void getTaskById(int taskId, DatabaseCallback<Task> callback) {
+        executor.execute(() -> {
+            try {
+                Task task = taskDao.getTaskById(taskId);
+                callback.onSuccess(task);
+            } catch (Exception e) {
+                callback.onError(e.getMessage());
+            }
+        });
+    }
+
     public void insert(Task task, DatabaseCallback<Long> callback) {
         executor.execute(() -> {
             try {

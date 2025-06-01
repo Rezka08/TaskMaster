@@ -125,9 +125,10 @@
                         android:padding="16dp">
 
                         <TextView
+                            android:id="@+id/tv_done_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="22"
+                            android:text="0"
                             android:textSize="36sp"
                             android:textStyle="bold"
                             android:textColor="@color/white"
@@ -162,9 +163,10 @@
                         android:padding="16dp">
 
                         <TextView
+                            android:id="@+id/tv_upcoming_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10"
+                            android:text="0"
                             android:textSize="36sp"
                             android:textStyle="bold"
                             android:textColor="@color/white"
@@ -199,9 +201,10 @@
                     android:padding="16dp">
 
                     <TextView
+                        android:id="@+id/tv_progress_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7"
+                        android:text="0"
                         android:textSize="36sp"
                         android:textStyle="bold"
                         android:textColor="@color/white"
