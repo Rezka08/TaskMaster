@@ -77,7 +77,7 @@ public class AddTaskFragment extends Fragment {
         taskViewModel.getAllCategories(new DatabaseListCallback<Category>() {
             @Override
             public void onSuccess(List<Category> categoryList) {
-                if (getActivity() != null) {
+                if (getActivity() != null && isAdded()) {
                     getActivity().runOnUiThread(() -> {
                         categories = categoryList;
                         setupCategoryChips();
@@ -87,7 +87,7 @@ public class AddTaskFragment extends Fragment {
 
             @Override
             public void onError(String error) {
-                if (getActivity() != null) {
+                if (getActivity() != null && isAdded()) {
                     getActivity().runOnUiThread(() -> {
                         Toast.makeText(getContext(), "Error loading categories: " + error, Toast.LENGTH_SHORT).show();
                     });
@@ -225,31 +225,30 @@ public class AddTaskFragment extends Fragment {
             return;
         }
 
+        // Disable button to prevent multiple clicks
+        btnCreateTask.setEnabled(false);
+        btnCreateTask.setText("Creating...");
+
         if (editingTask == null) {
             // Create new task
             Task newTask = new Task(title, description, selectedDate, selectedStartTime, selectedEndTime, selectedCategoryId);
             taskViewModel.insert(newTask, new DatabaseCallback<Long>() {
                 @Override
                 public void onSuccess(Long result) {
-                    if (getActivity() != null) {
+                    if (getActivity() != null && isAdded()) {
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getContext(), "Task created successfully", Toast.LENGTH_SHORT).show();
-                            clearForm();
-
-                            // Notify MainActivity about data change
-                            if (getActivity() instanceof MainActivity) {
-                                ((MainActivity) getActivity()).onDataChanged();
-                                ((MainActivity) getActivity()).navigateToHome();
-                            }
+                            navigateToHome();
                         });
                     }
                 }
 
                 @Override
                 public void onError(String error) {
-                    if (getActivity() != null) {
+                    if (getActivity() != null && isAdded()) {
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getContext(), "Error creating task: " + error, Toast.LENGTH_SHORT).show();
+                            resetCreateButton();
                         });
                     }
                 }
@@ -266,29 +265,55 @@ public class AddTaskFragment extends Fragment {
             taskViewModel.update(editingTask, new DatabaseCallback<Integer>() {
                 @Override
                 public void onSuccess(Integer result) {
-                    if (getActivity() != null) {
+                    if (getActivity() != null && isAdded()) {
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getContext(), "Task updated successfully", Toast.LENGTH_SHORT).show();
-                            clearForm();
-
-                            // Notify MainActivity about data change
-                            if (getActivity() instanceof MainActivity) {
-                                ((MainActivity) getActivity()).onDataChanged();
-                                ((MainActivity) getActivity()).navigateToHome();
-                            }
+                            navigateToHome();
                         });
                     }
                 }
 
                 @Override
                 public void onError(String error) {
-                    if (getActivity() != null) {
+                    if (getActivity() != null && isAdded()) {
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getContext(), "Error updating task: " + error, Toast.LENGTH_SHORT).show();
+                            resetCreateButton();
                         });
                     }
                 }
             });
+        }
+    }
+
+    private void resetCreateButton() {
+        btnCreateTask.setEnabled(true);
+        btnCreateTask.setText(editingTask == null ? "Create Task" : "Update Task");
+    }
+
+    private void navigateToHome() {
+        // Simple and safe navigation approach
+        if (getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+
+            // Use a delayed approach to avoid fragment conflicts
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                if (getActivity() != null && !getActivity().isFinishing()) {
+                    try {
+                        mainActivity.onDataChanged();
+
+                        // Simple bottom navigation switch
+                        com.google.android.material.bottomnavigation.BottomNavigationView bottomNav =
+                                getActivity().findViewById(R.id.bottom_navigation);
+                        if (bottomNav != null) {
+                            bottomNav.setSelectedItemId(R.id.nav_home);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 300); // Slightly longer delay
         }
     }
 
@@ -321,6 +346,9 @@ public class AddTaskFragment extends Fragment {
             chipGroupCategory.clearCheck();
             ((Chip) chipGroupCategory.getChildAt(0)).setChecked(true);
         }
+
+        // Re-enable button
+        btnCreateTask.setEnabled(true);
     }
 
     public void setEditingTask(Task task) {
@@ -353,7 +381,7 @@ public class AddTaskFragment extends Fragment {
         }
     }
 
-    // Add method to MainActivity to navigate to home
+    // Interface for MainActivity communication
     public interface MainActivity {
         void navigateToHome();
         void onDataChanged();

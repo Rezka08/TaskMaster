@@ -17,7 +17,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements AddTaskFragment.MainActivity {
     private BottomNavigationView bottomNavigationView;
-    private Fragment currentFragment;
     private Handler refreshHandler;
 
     // Fragment references for refresh management
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.M
 
         // Load home fragment by default
         if (savedInstanceState == null) {
-            loadFragment(getHomeFragment(), "HOME");
+            loadHomeFragment();
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
 
@@ -53,14 +52,13 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.M
     }
 
     private HomeFragment getHomeFragment() {
-        if (homeFragment == null) {
-            homeFragment = new HomeFragment();
-        }
+        // Always create new instance to avoid fragment conflicts
+        homeFragment = new HomeFragment();
         return homeFragment;
     }
 
     private CalendarFragment getCalendarFragment() {
-        if (calendarFragment == null) {
+        if (calendarFragment == null || !calendarFragment.isAdded()) {
             calendarFragment = new CalendarFragment();
         }
         return calendarFragment;
@@ -68,47 +66,66 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.M
 
     private void setupBottomNavigation() {
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            Fragment fragment = null;
-            String tag = "";
-
             if (item.getItemId() == R.id.nav_home) {
-                fragment = getHomeFragment();
-                tag = "HOME";
+                loadHomeFragment();
+                return true;
             } else if (item.getItemId() == R.id.nav_add_task) {
-                fragment = new AddTaskFragment(); // Always create new for clean form
-                tag = "ADD_TASK";
+                loadAddTaskFragment();
+                return true;
             } else if (item.getItemId() == R.id.nav_calendar) {
-                fragment = getCalendarFragment();
-                tag = "CALENDAR";
-            }
-
-            if (fragment != null) {
-                loadFragment(fragment, tag);
+                loadCalendarFragment();
                 return true;
             }
             return false;
         });
     }
 
-    private void loadFragment(Fragment fragment, String tag) {
-        // Check if fragment is already loaded
-        if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass()) && currentFragment.isAdded()) {
-            return;
+    private void loadHomeFragment() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
+            // Only load if not already showing home fragment
+            if (!(currentFragment instanceof HomeFragment)) {
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragment_container, getHomeFragment(), "HOME");
+                transaction.commitAllowingStateLoss();
+            }
+        } catch (Exception e) {
+            // Handle any fragment transaction exceptions gracefully
+            e.printStackTrace();
         }
+    }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+    private void loadAddTaskFragment() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        // Use replace instead of add to avoid fragment stack issues
-        transaction.replace(R.id.fragment_container, fragment, tag);
-
-        // Only add to back stack if it's not the home fragment
-        if (!tag.equals("HOME")) {
-            transaction.addToBackStack(tag);
+            // Always create new AddTaskFragment for clean form
+            AddTaskFragment addTaskFragment = new AddTaskFragment();
+            transaction.replace(R.id.fragment_container, addTaskFragment, "ADD_TASK");
+            transaction.addToBackStack("ADD_TASK");
+            transaction.commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        transaction.commitAllowingStateLoss(); // Use commitAllowingStateLoss to prevent IllegalStateException
-        currentFragment = fragment;
+    private void loadCalendarFragment() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
+            // Only load if not already showing calendar fragment
+            if (!(currentFragment instanceof CalendarFragment)) {
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragment_container, getCalendarFragment(), "CALENDAR");
+                transaction.commitAllowingStateLoss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -116,19 +133,57 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.M
         // Navigate to home fragment and select home in bottom navigation
         bottomNavigationView.setSelectedItemId(R.id.nav_home);
 
-        // Clear back stack
+        // Clear back stack safely
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        try {
+            // Clear all back stack entries one by one to avoid conflicts
+            while (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStackImmediate();
+            }
+        } catch (Exception e) {
+            // If there's an issue with back stack, clear it forcefully
+            for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+                fragmentManager.popBackStack();
+            }
+        }
 
-        // Load home fragment and refresh data
-        loadFragment(getHomeFragment(), "HOME");
-        scheduleDataRefresh();
+        // Use handler to ensure back stack is cleared before loading home
+        if (refreshHandler != null) {
+            refreshHandler.post(() -> {
+                loadHomeFragmentSafely();
+                scheduleDataRefresh();
+            });
+        }
+    }
+
+    private void loadHomeFragmentSafely() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
+            // Force replace with new home fragment to avoid conflicts
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+            // Remove current fragment if exists
+            if (currentFragment != null) {
+                transaction.remove(currentFragment);
+            }
+
+            // Add fresh home fragment
+            homeFragment = new HomeFragment(); // Create new instance
+            transaction.replace(R.id.fragment_container, homeFragment, "HOME");
+            transaction.commitAllowingStateLoss();
+
+        } catch (Exception e) {
+            // Fallback: just use bottom navigation to switch
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        }
     }
 
     // Method to navigate to add task
     public void navigateToAddTask() {
         bottomNavigationView.setSelectedItemId(R.id.nav_add_task);
-        loadFragment(new AddTaskFragment(), "ADD_TASK");
+        loadAddTaskFragment();
     }
 
     /**
@@ -138,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.M
         if (refreshHandler != null) {
             refreshHandler.postDelayed(() -> {
                 refreshActiveFragments();
-            }, 300); // Small delay to ensure fragment transition is complete
+            }, 500); // Increased delay to ensure fragment transition is complete
         }
     }
 
@@ -166,24 +221,51 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.M
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        // If there are fragments in back stack, pop them
+        // If there are fragments in back stack, pop them safely
         if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
+            try {
+                fragmentManager.popBackStack();
 
-            // Update bottom navigation based on current fragment
-            refreshHandler.postDelayed(() -> {
-                Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
-                if (currentFragment instanceof HomeFragment) {
-                    bottomNavigationView.setSelectedItemId(R.id.nav_home);
-                } else if (currentFragment instanceof AddTaskFragment) {
-                    bottomNavigationView.setSelectedItemId(R.id.nav_add_task);
-                } else if (currentFragment instanceof CalendarFragment) {
-                    bottomNavigationView.setSelectedItemId(R.id.nav_calendar);
+                // Update bottom navigation based on current fragment
+                if (refreshHandler != null) {
+                    refreshHandler.postDelayed(() -> {
+                        updateBottomNavigationSelection();
+                    }, 100);
                 }
-            }, 100);
+            } catch (Exception e) {
+                // Fallback to home if back navigation fails
+                navigateToHomeSafely();
+            }
         } else {
             // If we're at home fragment, exit app
             super.onBackPressed();
+        }
+    }
+
+    private void updateBottomNavigationSelection() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
+            if (currentFragment instanceof HomeFragment) {
+                bottomNavigationView.setSelectedItemId(R.id.nav_home);
+            } else if (currentFragment instanceof AddTaskFragment) {
+                bottomNavigationView.setSelectedItemId(R.id.nav_add_task);
+            } else if (currentFragment instanceof CalendarFragment) {
+                bottomNavigationView.setSelectedItemId(R.id.nav_calendar);
+            }
+        } catch (Exception e) {
+            // Default to home if detection fails
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        }
+    }
+
+    private void navigateToHomeSafely() {
+        try {
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+            loadHomeFragment();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -223,7 +305,12 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.M
         addTaskFragment.setArguments(args);
 
         bottomNavigationView.setSelectedItemId(R.id.nav_add_task);
-        loadFragment(addTaskFragment, "ADD_TASK");
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, addTaskFragment, "ADD_TASK");
+        transaction.addToBackStack("ADD_TASK");
+        transaction.commit();
     }
 
     @Override

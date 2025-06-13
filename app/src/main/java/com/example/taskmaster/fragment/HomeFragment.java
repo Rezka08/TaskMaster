@@ -25,7 +25,6 @@ import com.example.taskmaster.model.Task;
 import com.example.taskmaster.utils.DateUtils;
 import com.example.taskmaster.viewmodel.TaskViewModel;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class HomeFragment extends Fragment {
     private TaskViewModel taskViewModel;
@@ -36,14 +35,17 @@ public class HomeFragment extends Fragment {
     // Monthly Preview TextViews
     private TextView tvDoneCount, tvUpcomingCount, tvProgressCount;
 
-    // Synchronization variables
-    private boolean isDataLoading = false;
+    // Handler for UI updates
     private Handler mainHandler;
-    private final Object loadingLock = new Object();
 
-    // Data tracking
-    private AtomicInteger loadingCounter = new AtomicInteger(0);
-    private volatile boolean isFragmentActive = false;
+    // Loading state management
+    private volatile boolean isDataLoading = false;
+    private volatile boolean isFragmentReady = false;
+
+    // Data storage for reliable display
+    private int completedCount = 0;
+    private int upcomingCount = 0;
+    private int progressCount = 0;
 
     @Nullable
     @Override
@@ -61,11 +63,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        isFragmentActive = true;
-        // Load data with delay to ensure fragment is ready
-        if (mainHandler != null) {
-            mainHandler.postDelayed(this::loadAllDataSynchronized, 200);
-        }
+        isFragmentReady = true;
+
+        // Load data immediately when view is created
+        loadAllData();
     }
 
     private void initViews(View view) {
@@ -82,13 +83,7 @@ public class HomeFragment extends Fragment {
         mainHandler = new Handler(Looper.getMainLooper());
 
         // Set default values immediately
-        resetMonthlyPreview();
-    }
-
-    private void resetMonthlyPreview() {
-        if (tvDoneCount != null) tvDoneCount.setText("0");
-        if (tvUpcomingCount != null) tvUpcomingCount.setText("0");
-        if (tvProgressCount != null) tvProgressCount.setText("0");
+        updateMonthlyPreviewUI();
     }
 
     private void setupRecyclerView() {
@@ -121,29 +116,17 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Synchronized data loading to prevent race conditions
+     * Load all data with proper synchronization
      */
-    private void loadAllDataSynchronized() {
-        synchronized (loadingLock) {
-            if (isDataLoading || !isFragmentActive || !isAdded() || getContext() == null) {
-                return;
-            }
-
-            isDataLoading = true;
-            loadingCounter.set(4); // We're loading 4 pieces of data
-
-            // Reset UI first
-            if (mainHandler != null) {
-                mainHandler.post(() -> {
-                    resetMonthlyPreview();
-                    progressTaskAdapter.setTasks(null);
-                });
-            }
+    private void loadAllData() {
+        if (isDataLoading || !isFragmentReady || !isAdded() || getContext() == null) {
+            return;
         }
 
+        isDataLoading = true;
         String currentDate = DateUtils.getCurrentDate();
 
-        // Load all data simultaneously but track completion
+        // Load all data in sequence to avoid race conditions
         loadCompletedTasksCount();
         loadUpcomingTasksCount(currentDate);
         loadInProgressTasksCount(currentDate);
@@ -151,154 +134,160 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadCompletedTasksCount() {
+        if (!isAdded()) return;
+
         taskViewModel.getCompletedTasksCount(new DatabaseCountCallback() {
             @Override
             public void onSuccess(Integer count) {
-                updateUIOnMainThread(() -> {
-                    if (tvDoneCount != null && isFragmentActive) {
-                        tvDoneCount.setText(String.valueOf(count != null ? count : 0));
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    completedCount = count != null ? count : 0;
+                    updateMonthlyPreviewUI();
+                }
             }
 
             @Override
             public void onError(String error) {
-                updateUIOnMainThread(() -> {
-                    if (tvDoneCount != null && isFragmentActive) {
-                        tvDoneCount.setText("0");
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    completedCount = 0;
+                    updateMonthlyPreviewUI();
+                }
             }
         });
     }
 
     private void loadUpcomingTasksCount(String currentDate) {
+        if (!isAdded()) return;
+
         taskViewModel.getUpcomingTasksCount(currentDate, new DatabaseCountCallback() {
             @Override
             public void onSuccess(Integer count) {
-                updateUIOnMainThread(() -> {
-                    if (tvUpcomingCount != null && isFragmentActive) {
-                        tvUpcomingCount.setText(String.valueOf(count != null ? count : 0));
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    upcomingCount = count != null ? count : 0;
+                    updateMonthlyPreviewUI();
+                }
             }
 
             @Override
             public void onError(String error) {
-                updateUIOnMainThread(() -> {
-                    if (tvUpcomingCount != null && isFragmentActive) {
-                        tvUpcomingCount.setText("0");
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    upcomingCount = 0;
+                    updateMonthlyPreviewUI();
+                }
             }
         });
     }
 
     private void loadInProgressTasksCount(String currentDate) {
+        if (!isAdded()) return;
+
         taskViewModel.getInProgressTasksCount(currentDate, new DatabaseCountCallback() {
             @Override
             public void onSuccess(Integer count) {
-                updateUIOnMainThread(() -> {
-                    if (tvProgressCount != null && isFragmentActive) {
-                        tvProgressCount.setText(String.valueOf(count != null ? count : 0));
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    progressCount = count != null ? count : 0;
+                    updateMonthlyPreviewUI();
+                }
             }
 
             @Override
             public void onError(String error) {
-                updateUIOnMainThread(() -> {
-                    if (tvProgressCount != null && isFragmentActive) {
-                        tvProgressCount.setText("0");
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    progressCount = 0;
+                    updateMonthlyPreviewUI();
+                }
             }
         });
     }
 
     private void loadInProgressTasksList(String currentDate) {
+        if (!isAdded()) return;
+
         taskViewModel.getInProgressTasks(currentDate, new DatabaseListCallback<Task>() {
             @Override
             public void onSuccess(List<Task> tasks) {
-                updateUIOnMainThread(() -> {
-                    if (isFragmentActive) {
-                        progressTaskAdapter.setTasks(tasks);
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    updateTasksList(tasks);
+                    isDataLoading = false;
+                }
             }
 
             @Override
             public void onError(String error) {
-                updateUIOnMainThread(() -> {
-                    if (isFragmentActive) {
-                        progressTaskAdapter.setTasks(null);
-                    }
-                    onDataLoadComplete();
-                });
+                if (isAdded() && isFragmentReady) {
+                    updateTasksList(null);
+                    isDataLoading = false;
+                }
             }
         });
     }
 
-    private void updateUIOnMainThread(Runnable runnable) {
-        if (isAdded() && getActivity() != null) {
-            getActivity().runOnUiThread(runnable);
-        } else if (mainHandler != null) {
-            mainHandler.post(runnable);
+    /**
+     * Update monthly preview UI on main thread
+     */
+    private void updateMonthlyPreviewUI() {
+        if (!isAdded() || !isFragmentReady) return;
+
+        if (mainHandler != null) {
+            mainHandler.post(() -> {
+                if (isAdded() && isFragmentReady) {
+                    if (tvDoneCount != null) {
+                        tvDoneCount.setText(String.valueOf(completedCount));
+                    }
+                    if (tvUpcomingCount != null) {
+                        tvUpcomingCount.setText(String.valueOf(upcomingCount));
+                    }
+                    if (tvProgressCount != null) {
+                        tvProgressCount.setText(String.valueOf(progressCount));
+                    }
+                }
+            });
         }
     }
 
-    private void onDataLoadComplete() {
-        int remaining = loadingCounter.decrementAndGet();
-        if (remaining <= 0) {
-            synchronized (loadingLock) {
-                isDataLoading = false;
-            }
+    /**
+     * Update tasks list on main thread
+     */
+    private void updateTasksList(List<Task> tasks) {
+        if (!isAdded() || !isFragmentReady) return;
+
+        if (mainHandler != null) {
+            mainHandler.post(() -> {
+                if (isAdded() && isFragmentReady && progressTaskAdapter != null) {
+                    progressTaskAdapter.setTasks(tasks);
+                }
+            });
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        isFragmentActive = true;
 
         // Wait a bit before loading to ensure fragment is fully visible
         if (mainHandler != null) {
             mainHandler.postDelayed(() -> {
-                synchronized (loadingLock) {
-                    if (!isDataLoading && isFragmentActive) {
-                        loadAllDataSynchronized();
-                    }
+                if (isAdded() && isFragmentReady) {
+                    loadAllData();
                 }
-            }, 500);
+            }, 300);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        isFragmentActive = false;
+        isDataLoading = false;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        isFragmentActive = false;
+        isFragmentReady = false;
+        isDataLoading = false;
 
-        // Clean up handlers and reset loading state
+        // Clean up handlers
         if (mainHandler != null) {
             mainHandler.removeCallbacksAndMessages(null);
-        }
-
-        synchronized (loadingLock) {
-            isDataLoading = false;
-            loadingCounter.set(0);
         }
 
         // Clear adapters
@@ -311,8 +300,12 @@ public class HomeFragment extends Fragment {
      * Public method to refresh data from other components
      */
     public void refreshData() {
-        if (isFragmentActive && mainHandler != null) {
-            mainHandler.postDelayed(this::loadAllDataSynchronized, 100);
+        if (isFragmentReady && !isDataLoading && mainHandler != null) {
+            mainHandler.postDelayed(() -> {
+                if (isAdded() && isFragmentReady) {
+                    loadAllData();
+                }
+            }, 200);
         }
     }
 }
