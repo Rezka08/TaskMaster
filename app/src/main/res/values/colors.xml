@@ -2,6 +2,16 @@
 <resources>
     <!-- Primary Colors -->
     <color name="purple_primary">#6C63FF</color>
+    <color name="purple_primary_dark">#5A4FCF</color>
+    <color name="purple_primary_light">#8B7CF6</color>
+
+    <!-- Light Mode Background Colors -->
+    <color name="background_primary">#F8F8FF</color>
+    <color name="background_secondary">#FFFFFF</color>
+    <color name="surface_color">#FFFFFF</color>
+    <color name="surface_variant">#F1F5F9</color>
+
+    <!-- Original Colors -->
     <color name="light_purple_bg">#F8F8FF</color>
     <color name="dark_gray_bg">#565656</color>
 
@@ -16,8 +26,13 @@
     <color name="priority_low">#6BCF7F</color>
 
     <!-- Text Colors -->
+    <color name="text_primary">#2C3E50</color>
+    <color name="text_secondary">#7F8C8D</color>
+    <color name="text_tertiary">#95A5A6</color>
     <color name="text_dark">#2C3E50</color>
     <color name="text_gray">#7F8C8D</color>
+
+    <!-- White variations -->
     <color name="white">#FFFFFF</color>
     <color name="white_80">#CCFFFFFF</color>
     <color name="white_70">#B3FFFFFF</color>
@@ -33,4 +48,10 @@
     <!-- Bottom Navigation -->
     <color name="bottom_nav_selected">#6C63FF</color>
     <color name="bottom_nav_unselected">#9E9E9E</color>
+
+    <!-- Additional Light Mode Colors -->
+    <color name="divider_color">#E2E8F0</color>
+    <color name="ripple_color">#E2E8F0</color>
+    <color name="shadow_color">#1A000000</color>
+    <color name="overlay_color">#80000000</color>
 </resources>

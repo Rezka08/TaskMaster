@@ -10,6 +10,7 @@ import com.example.taskmaster.repository.TaskRepository;
 import com.example.taskmaster.model.Task;
 import com.example.taskmaster.model.Category;
 import com.example.taskmaster.utils.PriorityUtils;
+import com.example.taskmaster.utils.DateUtils;
 import java.util.List;
 
 public class TaskViewModel extends AndroidViewModel {
@@ -56,6 +57,11 @@ public class TaskViewModel extends AndroidViewModel {
     // Count methods for Monthly Preview
     public void getCompletedTasksCount(DatabaseCountCallback callback) {
         repository.getCompletedTasksCount(callback);
+    }
+
+    // New method: Get count of completed tasks AND overdue tasks
+    public void getCompletedAndOverdueTasksCount(DatabaseCountCallback callback) {
+        repository.getCompletedAndOverdueTasksCount(DateUtils.getCurrentDate(), callback);
     }
 
     public void getUpcomingTasksCount(String currentDate, DatabaseCountCallback callback) {

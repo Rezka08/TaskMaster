@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Primary Colors -->
+    <color name="purple_primary">#8B7CF6</color>
+    <color name="purple_primary_dark">#6D56F7</color>
+    <color name="purple_primary_light">#A78BFA</color>
+
+    <!-- Dark Mode Background Colors -->
+    <color name="background_primary">#0F0F23</color>
+    <color name="background_secondary">#1A1A2E</color>
+    <color name="surface_color">#252540</color>
+    <color name="surface_variant">#2D2D48</color>
+
+    <!-- Dark Mode Card Colors -->
+    <color name="light_purple_bg">#16162F</color>
+    <color name="dark_gray_bg">#2A2A4A</color>
+
+    <!-- Monthly Preview Colors - Dark Mode -->
+    <color name="done_green">#34D399</color>
+    <color name="upcoming_blue">#60A5FA</color>
+    <color name="progress_orange">#FBBF24</color>
+
+    <!-- Priority Colors - Dark Mode -->
+    <color name="priority_high">#F87171</color>
+    <color name="priority_medium">#FDE047</color>
+    <color name="priority_low">#4ADE80</color>
+
+    <!-- Text Colors - Dark Mode -->
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#CBD5E1</color>
+    <color name="text_tertiary">#94A3B8</color>
+    <color name="text_dark">#F1F5F9</color>
+    <color name="text_gray">#94A3B8</color>
+
+    <!-- White variations for dark mode -->
+    <color name="white">#F8FAFC</color>
+    <color name="white_80">#CCF8FAFC</color>
+    <color name="white_70">#B3F8FAFC</color>
+    <color name="white_30">#4DF8FAFC</color>
+
+    <!-- Widget Colors - Dark Mode -->
+    <color name="widget_gradient_start">#4C1D95</color>
+    <color name="widget_gradient_end">#5B21B6</color>
+
+    <!-- Chip Colors - Dark Mode -->
+    <color name="chip_unselected">#374151</color>
+
+    <!-- Bottom Navigation - Dark Mode -->
+    <color name="bottom_nav_selected">#8B7CF6</color>
+    <color name="bottom_nav_unselected">#6B7280</color>
+
+    <!-- Additional Dark Mode Colors -->
+    <color name="divider_color">#374151</color>
+    <color name="ripple_color">#4B5563</color>
+    <color name="shadow_color">#00000066</color>
+    <color name="overlay_color">#00000080</color>
+</resources>

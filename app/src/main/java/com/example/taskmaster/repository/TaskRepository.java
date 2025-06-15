@@ -126,6 +126,18 @@ public class TaskRepository {
         });
     }
 
+    // New method: Get count of completed tasks AND overdue tasks (tasks that passed their date)
+    public void getCompletedAndOverdueTasksCount(String currentDate, DatabaseCountCallback callback) {
+        executor.execute(() -> {
+            try {
+                Integer count = taskDao.getCompletedAndOverdueTasksCount(currentDate);
+                callback.onSuccess(count);
+            } catch (Exception e) {
+                callback.onError(e.getMessage());
+            }
+        });
+    }
+
     public void getUpcomingTasksCount(String currentDate, DatabaseCountCallback callback) {
         executor.execute(() -> {
             try {

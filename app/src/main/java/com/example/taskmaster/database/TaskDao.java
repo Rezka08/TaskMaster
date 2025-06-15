@@ -32,8 +32,11 @@ public class TaskDao {
             values.put(DatabaseHelper.COLUMN_TASK_UPDATED_AT, task.getUpdatedAt());
 
             return db.insert(DatabaseHelper.TABLE_TASKS, null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         } finally {
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -58,8 +61,11 @@ public class TaskDao {
             return db.update(DatabaseHelper.TABLE_TASKS, values,
                     DatabaseHelper.COLUMN_TASK_ID + " = ?",
                     new String[]{String.valueOf(task.getId())});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         } finally {
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -72,8 +78,11 @@ public class TaskDao {
             return db.delete(DatabaseHelper.TABLE_TASKS,
                     DatabaseHelper.COLUMN_TASK_ID + " = ?",
                     new String[]{String.valueOf(task.getId())});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         } finally {
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -89,15 +98,18 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(taskId)});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 return cursorToTask(cursor);
             }
             return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -115,17 +127,21 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, null);
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Task task = cursorToTask(cursor);
-                    tasks.add(task);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -144,17 +160,21 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{date});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Task task = cursorToTask(cursor);
-                    tasks.add(task);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -175,17 +195,21 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{currentDate});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Task task = cursorToTask(cursor);
-                    tasks.add(task);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -205,17 +229,21 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{currentDate});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Task task = cursorToTask(cursor);
-                    tasks.add(task);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -234,17 +262,21 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, null);
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Task task = cursorToTask(cursor);
-                    tasks.add(task);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -265,17 +297,21 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{searchPattern, searchPattern});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Task task = cursorToTask(cursor);
-                    tasks.add(task);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -293,15 +329,18 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{monthYear + "%"});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 return cursor.getInt(0);
             }
             return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -318,15 +357,54 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, null);
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 return cursor.getInt(0);
             }
             return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+    }
+
+    /**
+     * NEW METHOD: Get count of completed tasks AND overdue tasks (tasks that passed their date)
+     * This includes:
+     * 1. Tasks that are marked as completed (is_completed = 1)
+     * 2. Tasks that are overdue (date < current date AND is_completed = 0)
+     */
+    public int getCompletedAndOverdueTasksCount(String currentDate) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            // Query to get count of completed tasks OR overdue tasks
+            String selectQuery = "SELECT COUNT(*) FROM " + DatabaseHelper.TABLE_TASKS +
+                    " WHERE " + DatabaseHelper.COLUMN_TASK_IS_COMPLETED + " = 1" +
+                    " OR (" + DatabaseHelper.COLUMN_TASK_IS_COMPLETED + " = 0" +
+                    " AND " + DatabaseHelper.COLUMN_TASK_DATE + " < ?)";
+
+            db = dbHelper.getReadableDatabase();
+            cursor = db.rawQuery(selectQuery, new String[]{currentDate});
+
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -343,15 +421,18 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{currentDate});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 return cursor.getInt(0);
             }
             return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -368,15 +449,18 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{currentDate});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 return cursor.getInt(0);
             }
             return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -396,17 +480,21 @@ public class TaskDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{currentDate});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Task task = cursorToTask(cursor);
-                    tasks.add(task);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -414,18 +502,27 @@ public class TaskDao {
     }
 
     private Task cursorToTask(Cursor cursor) {
-        return new Task(
-                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_ID)),
-                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_TITLE)),
-                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_DESCRIPTION)),
-                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_DATE)),
-                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_START_TIME)),
-                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_END_TIME)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_CATEGORY_ID)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_IS_COMPLETED)) == 1,
-                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_PRIORITY)),
-                cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_CREATED_AT)),
-                cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_UPDATED_AT))
-        );
+        try {
+            if (cursor == null || cursor.isClosed()) {
+                return null;
+            }
+
+            return new Task(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_TITLE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_DESCRIPTION)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_DATE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_START_TIME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_END_TIME)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_CATEGORY_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_IS_COMPLETED)) == 1,
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_PRIORITY)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_CREATED_AT)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TASK_UPDATED_AT))
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

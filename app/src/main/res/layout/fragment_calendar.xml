@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/light_purple_bg">
+    android:background="?attr/backgroundColor">
 
     <!-- Header -->
     <LinearLayout
@@ -24,7 +24,8 @@
             android:layout_marginEnd="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="?attr/iconTint" />
 
         <!-- Month/Year -->
         <TextView
@@ -35,7 +36,7 @@
             android:text="May, 2025"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/text_dark"
+            android:textColor="?attr/textPrimary"
             android:gravity="center" />
 
         <!-- Forward Button (Next Month) -->
@@ -47,7 +48,8 @@
             android:layout_marginEnd="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="?attr/iconTint" />
 
         <!-- Search Button -->
         <ImageView
@@ -58,21 +60,23 @@
             android:layout_marginEnd="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="?attr/iconTint" />
 
-        <!-- Add Task Button -->
+        <!-- Settings Button (replaced Add Task) -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_add_task"
+            android:id="@+id/btn_settings"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="+ Add Task"
+            android:text="⚙️ Settings"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/white"
             app:backgroundTint="@color/purple_primary"
             app:cornerRadius="20dp"
             android:minWidth="0dp"
-            android:paddingHorizontal="16dp" />
+            android:paddingHorizontal="16dp"
+            app:rippleColor="@color/white_30" />
 
     </LinearLayout>
 
@@ -83,7 +87,8 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
         app:cardCornerRadius="16dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="?attr/surfaceColor">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,7 +110,7 @@
                     android:layout_weight="1"
                     android:text="Mo"
                     android:textSize="14sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:gravity="center"
                     android:textStyle="bold" />
 
@@ -115,7 +120,7 @@
                     android:layout_weight="1"
                     android:text="Tu"
                     android:textSize="14sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:gravity="center"
                     android:textStyle="bold" />
 
@@ -125,7 +130,7 @@
                     android:layout_weight="1"
                     android:text="We"
                     android:textSize="14sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:gravity="center"
                     android:textStyle="bold" />
 
@@ -135,7 +140,7 @@
                     android:layout_weight="1"
                     android:text="Th"
                     android:textSize="14sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:gravity="center"
                     android:textStyle="bold" />
 
@@ -145,7 +150,7 @@
                     android:layout_weight="1"
                     android:text="Fr"
                     android:textSize="14sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:gravity="center"
                     android:textStyle="bold" />
 
@@ -155,7 +160,7 @@
                     android:layout_weight="1"
                     android:text="Sa"
                     android:textSize="14sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:gravity="center"
                     android:textStyle="bold" />
 
@@ -165,7 +170,7 @@
                     android:layout_weight="1"
                     android:text="Su"
                     android:textSize="14sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:gravity="center"
                     android:textStyle="bold" />
 
@@ -196,7 +201,7 @@
             android:text="Tasks"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/text_dark"
+            android:textColor="?attr/textPrimary"
             android:layout_marginBottom="16dp" />
 
         <!-- Tasks RecyclerView -->
@@ -228,7 +233,7 @@
                 android:layout_height="wrap_content"
                 android:text="No tasks for this date"
                 android:textSize="16sp"
-                android:textColor="@color/text_gray"
+                android:textColor="?attr/textSecondary"
                 android:gravity="center" />
 
         </LinearLayout>

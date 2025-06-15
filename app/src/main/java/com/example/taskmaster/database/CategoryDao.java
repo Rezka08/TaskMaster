@@ -24,8 +24,11 @@ public class CategoryDao {
             values.put(DatabaseHelper.COLUMN_CATEGORY_COLOR, category.getColor());
 
             return db.insert(DatabaseHelper.TABLE_CATEGORIES, null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         } finally {
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -42,17 +45,21 @@ public class CategoryDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, null);
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Category category = cursorToCategory(cursor);
-                    categories.add(category);
+                    if (category != null) {
+                        categories.add(category);
+                    }
                 } while (cursor.moveToNext());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
@@ -69,25 +76,37 @@ public class CategoryDao {
             db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(id)});
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 return cursorToCategory(cursor);
             }
             return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         } finally {
-            if (cursor != null) {
+            if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            if (db != null) {
+            if (db != null && db.isOpen()) {
                 db.close();
             }
         }
     }
 
     private Category cursorToCategory(Cursor cursor) {
-        return new Category(
-                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID)),
-                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_NAME)),
-                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_COLOR))
-        );
+        try {
+            if (cursor == null || cursor.isClosed()) {
+                return null;
+            }
+
+            return new Category(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_COLOR))
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

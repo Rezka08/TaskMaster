@@ -7,9 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.taskmaster.R;
@@ -17,6 +14,7 @@ import com.example.taskmaster.callback.DatabaseCallback;
 import com.example.taskmaster.model.Task;
 import com.example.taskmaster.model.Category;
 import com.example.taskmaster.utils.DateUtils;
+import com.example.taskmaster.utils.ThemeManager;
 import com.example.taskmaster.viewmodel.TaskViewModel;
 import com.google.android.material.button.MaterialButton;
 
@@ -31,17 +29,16 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     private Task currentTask;
     private TaskViewModel taskViewModel;
+    private ThemeManager themeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Apply theme before setContentView
+        themeManager = new ThemeManager(this);
+        themeManager.applyTheme();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_task_detail);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.detail), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         initViews();
         setupViewModel();
@@ -170,13 +167,17 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void showDeleteConfirmation() {
         if (currentTask == null) return;
 
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Task")
+        // Create AlertDialog with theme-aware styling
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Delete Task")
                 .setMessage("Are you sure you want to delete \"" + currentTask.getTitle() + "\"? This action cannot be undone.")
                 .setPositiveButton("Delete", (dialog, which) -> deleteTask())
                 .setNegativeButton("Cancel", null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                .setIcon(android.R.drawable.ic_dialog_alert);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void deleteTask() {
@@ -216,5 +217,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (currentTask != null) {
             loadTaskData();
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        // Add smooth transition
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

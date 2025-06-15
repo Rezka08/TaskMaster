@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.taskmaster.activity.NotificationActivity;
 import com.example.taskmaster.activity.SearchActivity;
 import com.example.taskmaster.R;
@@ -25,12 +26,14 @@ import com.example.taskmaster.model.Task;
 import com.example.taskmaster.utils.DateUtils;
 import com.example.taskmaster.viewmodel.TaskViewModel;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HomeFragment extends Fragment {
     private TaskViewModel taskViewModel;
     private RecyclerView rvProgressTasks;
     private ProgressTaskAdapter progressTaskAdapter;
     private ImageView ivSearch, ivNotification;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     // Monthly Preview TextViews
     private TextView tvDoneCount, tvUpcomingCount, tvProgressCount;
@@ -38,14 +41,22 @@ public class HomeFragment extends Fragment {
     // Handler for UI updates
     private Handler mainHandler;
 
-    // Loading state management
-    private volatile boolean isDataLoading = false;
+    // Loading state management with atomic operations
     private volatile boolean isFragmentReady = false;
+    private AtomicInteger loadingCounter = new AtomicInteger(0);
+    private final int TOTAL_LOADING_OPERATIONS = 4; // We have 4 async operations
 
-    // Data storage for reliable display
-    private int completedCount = 0;
-    private int upcomingCount = 0;
-    private int progressCount = 0;
+    // Data cache to prevent data loss
+    private volatile int cachedCompletedCount = 0;
+    private volatile int cachedUpcomingCount = 0;
+    private volatile int cachedProgressCount = 0;
+    private volatile List<Task> cachedProgressTasks = null;
+
+    // Loading flags for each operation
+    private volatile boolean completedCountLoaded = false;
+    private volatile boolean upcomingCountLoaded = false;
+    private volatile boolean progressCountLoaded = false;
+    private volatile boolean progressTasksLoaded = false;
 
     @Nullable
     @Override
@@ -53,6 +64,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         initViews(view);
+        setupSwipeRefresh();
         setupRecyclerView();
         setupViewModel();
         setupClickListeners();
@@ -66,10 +78,11 @@ public class HomeFragment extends Fragment {
         isFragmentReady = true;
 
         // Load data immediately when view is created
-        loadAllData();
+        startLoadingAllData();
     }
 
     private void initViews(View view) {
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         rvProgressTasks = view.findViewById(R.id.rv_progress_tasks);
         ivSearch = view.findViewById(R.id.iv_search);
         ivNotification = view.findViewById(R.id.iv_notification);
@@ -82,8 +95,22 @@ public class HomeFragment extends Fragment {
         // Initialize handler
         mainHandler = new Handler(Looper.getMainLooper());
 
-        // Set default values immediately
-        updateMonthlyPreviewUI();
+        // Set cached values immediately to prevent 0 display
+        updateUIWithCachedData();
+    }
+
+    private void setupSwipeRefresh() {
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setColorSchemeResources(
+                    R.color.purple_primary,
+                    R.color.upcoming_blue,
+                    R.color.progress_orange
+            );
+
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                refreshAllData();
+            });
+        }
     }
 
     private void setupRecyclerView() {
@@ -97,6 +124,11 @@ public class HomeFragment extends Fragment {
 
         rvProgressTasks.setLayoutManager(new LinearLayoutManager(getContext()));
         rvProgressTasks.setAdapter(progressTaskAdapter);
+
+        // Set cached tasks if available
+        if (cachedProgressTasks != null) {
+            progressTaskAdapter.setTasks(cachedProgressTasks);
+        }
     }
 
     private void setupViewModel() {
@@ -116,40 +148,67 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Load all data with proper synchronization
+     * Start loading all data with proper synchronization
      */
-    private void loadAllData() {
-        if (isDataLoading || !isFragmentReady || !isAdded() || getContext() == null) {
+    private void startLoadingAllData() {
+        if (!isFragmentReady || !isAdded() || getContext() == null) {
             return;
         }
 
-        isDataLoading = true;
+        // Reset loading states
+        loadingCounter.set(0);
+        resetLoadingFlags();
+
         String currentDate = DateUtils.getCurrentDate();
 
-        // Load all data in sequence to avoid race conditions
-        loadCompletedTasksCount();
+        // Start all loading operations
+        loadCompletedAndOverdueTasksCount();
         loadUpcomingTasksCount(currentDate);
         loadInProgressTasksCount(currentDate);
         loadInProgressTasksList(currentDate);
     }
 
-    private void loadCompletedTasksCount() {
+    /**
+     * Refresh all data (called by swipe refresh)
+     */
+    private void refreshAllData() {
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
+
+        startLoadingAllData();
+    }
+
+    private void resetLoadingFlags() {
+        completedCountLoaded = false;
+        upcomingCountLoaded = false;
+        progressCountLoaded = false;
+        progressTasksLoaded = false;
+    }
+
+    private void loadCompletedAndOverdueTasksCount() {
         if (!isAdded()) return;
 
-        taskViewModel.getCompletedTasksCount(new DatabaseCountCallback() {
+        taskViewModel.getCompletedAndOverdueTasksCount(new DatabaseCountCallback() {
             @Override
             public void onSuccess(Integer count) {
                 if (isAdded() && isFragmentReady) {
-                    completedCount = count != null ? count : 0;
-                    updateMonthlyPreviewUI();
+                    cachedCompletedCount = count != null ? count : 0;
+                    completedCountLoaded = true;
+
+                    updateUIOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
 
             @Override
             public void onError(String error) {
                 if (isAdded() && isFragmentReady) {
-                    completedCount = 0;
-                    updateMonthlyPreviewUI();
+                    // Keep cached value, don't reset to 0
+                    completedCountLoaded = true;
+
+                    updateUIOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
         });
@@ -162,16 +221,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(Integer count) {
                 if (isAdded() && isFragmentReady) {
-                    upcomingCount = count != null ? count : 0;
-                    updateMonthlyPreviewUI();
+                    cachedUpcomingCount = count != null ? count : 0;
+                    upcomingCountLoaded = true;
+
+                    updateUIOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
 
             @Override
             public void onError(String error) {
                 if (isAdded() && isFragmentReady) {
-                    upcomingCount = 0;
-                    updateMonthlyPreviewUI();
+                    // Keep cached value, don't reset to 0
+                    upcomingCountLoaded = true;
+
+                    updateUIOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
         });
@@ -184,16 +249,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(Integer count) {
                 if (isAdded() && isFragmentReady) {
-                    progressCount = count != null ? count : 0;
-                    updateMonthlyPreviewUI();
+                    cachedProgressCount = count != null ? count : 0;
+                    progressCountLoaded = true;
+
+                    updateUIOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
 
             @Override
             public void onError(String error) {
                 if (isAdded() && isFragmentReady) {
-                    progressCount = 0;
-                    updateMonthlyPreviewUI();
+                    // Keep cached value, don't reset to 0
+                    progressCountLoaded = true;
+
+                    updateUIOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
         });
@@ -206,54 +277,85 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(List<Task> tasks) {
                 if (isAdded() && isFragmentReady) {
-                    updateTasksList(tasks);
-                    isDataLoading = false;
+                    cachedProgressTasks = tasks;
+                    progressTasksLoaded = true;
+
+                    updateTasksListOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
 
             @Override
             public void onError(String error) {
                 if (isAdded() && isFragmentReady) {
-                    updateTasksList(null);
-                    isDataLoading = false;
+                    // Keep cached tasks, don't clear them
+                    progressTasksLoaded = true;
+
+                    updateTasksListOnMainThread();
+                    checkAllDataLoaded();
                 }
             }
         });
     }
 
     /**
-     * Update monthly preview UI on main thread
+     * Check if all data loading operations are complete
      */
-    private void updateMonthlyPreviewUI() {
+    private void checkAllDataLoaded() {
+        if (completedCountLoaded && upcomingCountLoaded &&
+                progressCountLoaded && progressTasksLoaded) {
+
+            // All data loaded, hide refresh indicator
+            if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                mainHandler.post(() -> {
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * Update UI with cached data immediately
+     */
+    private void updateUIWithCachedData() {
+        if (tvDoneCount != null) {
+            tvDoneCount.setText(String.valueOf(cachedCompletedCount));
+        }
+        if (tvUpcomingCount != null) {
+            tvUpcomingCount.setText(String.valueOf(cachedUpcomingCount));
+        }
+        if (tvProgressCount != null) {
+            tvProgressCount.setText(String.valueOf(cachedProgressCount));
+        }
+    }
+
+    /**
+     * Update monthly preview UI on main thread with cached data
+     */
+    private void updateUIOnMainThread() {
         if (!isAdded() || !isFragmentReady) return;
 
         if (mainHandler != null) {
             mainHandler.post(() -> {
                 if (isAdded() && isFragmentReady) {
-                    if (tvDoneCount != null) {
-                        tvDoneCount.setText(String.valueOf(completedCount));
-                    }
-                    if (tvUpcomingCount != null) {
-                        tvUpcomingCount.setText(String.valueOf(upcomingCount));
-                    }
-                    if (tvProgressCount != null) {
-                        tvProgressCount.setText(String.valueOf(progressCount));
-                    }
+                    updateUIWithCachedData();
                 }
             });
         }
     }
 
     /**
-     * Update tasks list on main thread
+     * Update tasks list on main thread with cached data
      */
-    private void updateTasksList(List<Task> tasks) {
+    private void updateTasksListOnMainThread() {
         if (!isAdded() || !isFragmentReady) return;
 
         if (mainHandler != null) {
             mainHandler.post(() -> {
                 if (isAdded() && isFragmentReady && progressTaskAdapter != null) {
-                    progressTaskAdapter.setTasks(tasks);
+                    progressTaskAdapter.setTasks(cachedProgressTasks);
                 }
             });
         }
@@ -263,49 +365,42 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        // Wait a bit before loading to ensure fragment is fully visible
+        // Small delay to ensure fragment is fully visible, then refresh
         if (mainHandler != null) {
             mainHandler.postDelayed(() -> {
                 if (isAdded() && isFragmentReady) {
-                    loadAllData();
+                    startLoadingAllData();
                 }
-            }, 300);
+            }, 200);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        isDataLoading = false;
+        // Don't reset data when pausing, keep cache
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         isFragmentReady = false;
-        isDataLoading = false;
 
         // Clean up handlers
         if (mainHandler != null) {
             mainHandler.removeCallbacksAndMessages(null);
         }
 
-        // Clear adapters
-        if (progressTaskAdapter != null) {
-            progressTaskAdapter.setTasks(null);
-        }
+        // Don't clear cached data, keep it for next time
     }
 
-    /**
-     * Public method to refresh data from other components
-     */
     public void refreshData() {
-        if (isFragmentReady && !isDataLoading && mainHandler != null) {
+        if (isFragmentReady && mainHandler != null) {
             mainHandler.postDelayed(() -> {
                 if (isAdded() && isFragmentReady) {
-                    loadAllData();
+                    startLoadingAllData();
                 }
-            }, 200);
+            }, 100);
         }
     }
 }

@@ -9,9 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +17,7 @@ import com.example.taskmaster.R;
 import com.example.taskmaster.adapter.SearchTaskAdapter;
 import com.example.taskmaster.callback.DatabaseListCallback;
 import com.example.taskmaster.model.Task;
+import com.example.taskmaster.utils.ThemeManager;
 import com.example.taskmaster.viewmodel.TaskViewModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,17 +30,16 @@ public class SearchActivity extends AppCompatActivity {
     private ImageView ivBack, ivClear;
     private TextView tvResultsCount;
     private View layoutEmptyState;
+    private ThemeManager themeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Apply theme before setContentView
+        themeManager = new ThemeManager(this);
+        themeManager.applyTheme();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.search), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         initViews();
         setupRecyclerView();
@@ -69,7 +66,7 @@ public class SearchActivity extends AppCompatActivity {
             // Navigate to Task Detail
             Intent intent = new Intent(this, TaskDetailActivity.class);
             intent.putExtra("task_id", task.getId());
-            startActivityForResult(intent, 1001); // Use startActivityForResult to detect changes
+            startActivityForResult(intent, 1001);
         });
 
         rvSearchResults.setLayoutManager(new LinearLayoutManager(this));
@@ -181,5 +178,12 @@ public class SearchActivity extends AppCompatActivity {
         if (!query.isEmpty() && query.length() >= 2) {
             searchTasks(query);
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        // Add smooth transition
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

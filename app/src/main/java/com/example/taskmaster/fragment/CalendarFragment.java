@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.taskmaster.R;
 import com.example.taskmaster.activity.SearchActivity;
+import com.example.taskmaster.activity.SettingsActivity;
 import com.example.taskmaster.adapter.CalendarTaskAdapter;
 import com.example.taskmaster.adapter.CalendarDayAdapter;
 import com.example.taskmaster.callback.DatabaseListCallback;
@@ -37,7 +38,7 @@ public class CalendarFragment extends Fragment {
     private CalendarDayAdapter calendarDayAdapter;
     private TextView tvMonthYear;
     private ImageView ivBack, ivSearch, ivForward;
-    private MaterialButton btnAddTask;
+    private MaterialButton btnSettings;
 
     private String selectedDate = "";
     private Calendar currentCalendar;
@@ -63,7 +64,7 @@ public class CalendarFragment extends Fragment {
         ivBack = view.findViewById(R.id.iv_back);
         ivSearch = view.findViewById(R.id.iv_search);
         ivForward = view.findViewById(R.id.iv_forward);
-        btnAddTask = view.findViewById(R.id.btn_add_task);
+        btnSettings = view.findViewById(R.id.btn_settings);
 
         currentCalendar = Calendar.getInstance();
         selectedDate = DateUtils.getCurrentDate();
@@ -120,11 +121,14 @@ public class CalendarFragment extends Fragment {
             startActivity(intent);
         });
 
-        btnAddTask.setOnClickListener(v -> {
-            // Navigate to add task fragment
-            if (getActivity() instanceof com.example.taskmaster.activity.MainActivity) {
-                // Switch to add task tab
-                ((com.example.taskmaster.activity.MainActivity) getActivity()).navigateToAddTask();
+        // NEW: Settings button click listener
+        btnSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SettingsActivity.class);
+            startActivity(intent);
+
+            // Add smooth transition
+            if (getActivity() != null) {
+                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
     }
