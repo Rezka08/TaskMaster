@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/backgroundColor">
+    android:background="@color/light_purple_bg">
 
     <!-- Header -->
     <LinearLayout
@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         android:padding="20dp"
         android:gravity="center_vertical"
-        android:background="?attr/surfaceColor">
+        android:background="@color/white">
 
         <!-- Back Button -->
         <ImageView
@@ -26,7 +26,7 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="?attr/iconTint" />
+            app:tint="@color/text_gray" />
 
         <!-- Title -->
         <TextView
@@ -36,7 +36,7 @@
             android:text="Settings"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="?attr/textPrimary" />
+            android:textColor="@color/text_dark" />
 
     </LinearLayout>
 
@@ -59,7 +59,7 @@
                 android:text="Theme"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="?attr/textPrimary"
+                android:textColor="@color/text_dark"
                 android:layout_marginBottom="16dp" />
 
             <!-- Light Mode Option -->
@@ -73,7 +73,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="?attr/surfaceColor">
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_light_mode"
                         android:layout_marginEnd="16dp"
-                        app:tint="?attr/iconTint" />
+                        app:tint="@color/text_gray" />
 
                     <!-- Text Content -->
                     <LinearLayout
@@ -103,14 +103,14 @@
                             android:text="Light Mode"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="?attr/textPrimary" />
+                            android:textColor="@color/text_dark" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Classic bright theme"
                             android:textSize="14sp"
-                            android:textColor="?attr/textSecondary"
+                            android:textColor="@color/text_gray"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
@@ -139,7 +139,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="?attr/surfaceColor">
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_dark_mode"
                         android:layout_marginEnd="16dp"
-                        app:tint="?attr/iconTint" />
+                        app:tint="@color/text_gray" />
 
                     <!-- Text Content -->
                     <LinearLayout
@@ -169,14 +169,14 @@
                             android:text="Dark Mode"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="?attr/textPrimary" />
+                            android:textColor="@color/text_dark" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Easy on the eyes"
                             android:textSize="14sp"
-                            android:textColor="?attr/textSecondary"
+                            android:textColor="@color/text_gray"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
@@ -205,7 +205,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="?attr/surfaceColor">
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -220,7 +220,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_auto_mode"
                         android:layout_marginEnd="16dp"
-                        app:tint="?attr/iconTint" />
+                        app:tint="@color/text_gray" />
 
                     <!-- Text Content -->
                     <LinearLayout
@@ -235,14 +235,14 @@
                             android:text="Follow System"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="?attr/textPrimary" />
+                            android:textColor="@color/text_dark" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Adapts to system theme"
                             android:textSize="14sp"
-                            android:textColor="?attr/textSecondary"
+                            android:textColor="@color/text_gray"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
@@ -267,7 +267,7 @@
                 android:text="About"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="?attr/textPrimary"
+                android:textColor="@color/text_dark"
                 android:layout_marginBottom="16dp" />
 
             <!-- App Info Card -->
@@ -277,7 +277,7 @@
                 android:layout_marginBottom="32dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="?attr/surfaceColor">
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -300,7 +300,7 @@
                         android:text="TaskMaster"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="?attr/textPrimary"
+                        android:textColor="@color/text_dark"
                         android:layout_marginBottom="4dp" />
 
                     <!-- App Version -->
@@ -310,7 +310,7 @@
                         android:layout_height="wrap_content"
                         android:text="Version 1.0"
                         android:textSize="14sp"
-                        android:textColor="?attr/textSecondary"
+                        android:textColor="@color/text_gray"
                         android:layout_marginBottom="8dp" />
 
                     <!-- Description -->
@@ -319,7 +319,7 @@
                         android:layout_height="wrap_content"
                         android:text="Your personal productivity companion"
                         android:textSize="14sp"
-                        android:textColor="?attr/textSecondary"
+                        android:textColor="@color/text_gray"
                         android:gravity="center" />
 
                 </LinearLayout>

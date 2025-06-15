@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/notification"
-    android:background="@color/light_purple_bg">
+    android:background="?attr/backgroundColor">
 
     <!-- Header -->
     <LinearLayout
@@ -25,7 +25,8 @@
             android:layout_marginEnd="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="?attr/iconTint" />
 
         <!-- Title Section -->
         <LinearLayout
@@ -40,14 +41,14 @@
                 android:text="Notification"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_dark" />
+                android:textColor="?attr/textPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Just a little reminder for you :)"
                 android:textSize="14sp"
-                android:textColor="@color/text_gray"
+                android:textColor="?attr/textSecondary"
                 android:layout_marginTop="4dp" />
 
         </LinearLayout>
@@ -63,8 +64,8 @@
         android:layout_marginBottom="20dp"
         app:tabMode="fixed"
         app:tabGravity="fill"
-        app:tabSelectedTextColor="@color/text_dark"
-        app:tabTextColor="@color/text_gray"
+        app:tabSelectedTextColor="?attr/textPrimary"
+        app:tabTextColor="?attr/textSecondary"
         app:tabIndicatorHeight="0dp"
         app:tabBackground="@drawable/tab_background_selector"
         app:tabTextAppearance="@style/TabTextAppearance" />
@@ -85,7 +86,7 @@
             android:text="5 Task Upcoming"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/text_dark"
+            android:textColor="?attr/textPrimary"
             android:layout_marginBottom="16dp" />
 
         <!-- Tasks RecyclerView -->
@@ -110,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:text=":''v"
                 android:textSize="48sp"
-                android:textColor="@color/text_gray"
+                android:textColor="?attr/textSecondary"
                 android:layout_marginBottom="16dp" />
 
             <TextView
@@ -118,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:text="Just like your heart, there's nothing here. Maybe add some task first?"
                 android:textSize="16sp"
-                android:textColor="@color/text_gray"
+                android:textColor="?attr/textSecondary"
                 android:gravity="center"
                 android:layout_marginHorizontal="40dp" />
 

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/backgroundColor">
+    android:background="@color/light_purple_bg">
 
-    <!-- Header with Search -->
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="20dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="@color/white">
 
         <!-- Back Button -->
         <ImageView
@@ -25,16 +25,17 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="?attr/iconTint" />
+            app:tint="@color/text_gray" />
 
-        <!-- Search Bar -->
+        <!-- Search Input Container -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            app:cardCornerRadius="24dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="?attr/surfaceColor">
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,13 +44,6 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_search"
-                    android:layout_marginEnd="12dp"
-                    app:tint="?attr/iconTint" />
-
                 <EditText
                     android:id="@+id/et_search"
                     android:layout_width="0dp"
@@ -57,14 +51,13 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:hint="Search tasks..."
-                    android:textSize="16sp"
-                    android:textColor="?attr/textPrimary"
-                    android:textColorHint="?attr/textSecondary"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_gray"
                     android:gravity="center_vertical"
                     android:padding="0dp"
-                    android:inputType="text"
-                    android:imeOptions="actionSearch"
-                    android:maxLines="1" />
+                    android:importantForAutofill="no"
+                    android:inputType="text" />
 
                 <ImageView
                     android:id="@+id/iv_clear"
@@ -76,7 +69,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="?attr/iconTint" />
+                    app:tint="@color/text_gray" />
 
             </LinearLayout>
 
@@ -84,16 +77,24 @@
 
     </LinearLayout>
 
-    <!-- Results Count -->
-    <TextView
-        android:id="@+id/tv_results_count"
-        android:layout_width="wrap_content"
+    <!-- Search Results Info -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="16dp"
-        android:textSize="14sp"
-        android:textColor="?attr/textSecondary"
-        android:visibility="gone" />
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_results_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_gray" />
+
+    </LinearLayout>
 
     <!-- Search Results -->
     <androidx.recyclerview.widget.RecyclerView
@@ -112,13 +113,14 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="40dp">
+        android:padding="40dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🔍"
-            android:textSize="64sp"
+            android:textSize="48sp"
             android:layout_marginBottom="16dp" />
 
         <TextView
@@ -127,7 +129,16 @@
             android:layout_height="wrap_content"
             android:text="Start typing to search tasks..."
             android:textSize="16sp"
-            android:textColor="?attr/textSecondary"
+            android:textColor="@color/text_gray"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search by task name or description"
+            android:textSize="14sp"
+            android:textColor="@color/text_gray"
             android:gravity="center" />
 
     </LinearLayout>

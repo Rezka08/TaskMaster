@@ -2,15 +2,10 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/TaskCardStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="6dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="?attr/surfaceColor"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_marginVertical="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,28 +29,24 @@
 
             <TextView
                 android:id="@+id/tv_task_title"
+                style="@style/BodyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Buat Power Point"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="?attr/textPrimary" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_task_time"
+                style="@style/CaptionTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 Days ago"
-                android:textSize="14sp"
-                android:textColor="?attr/textSecondary" />
+                android:text="2 Days ago" />
 
         </LinearLayout>
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_more_vert"
-            android:tint="?attr/iconTint" />
+            style="@style/IconStyle"
+            android:src="@drawable/ic_more_vert" />
 
     </LinearLayout>
 

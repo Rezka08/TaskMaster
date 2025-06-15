@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/light_purple_bg">
+        android:background="?attr/backgroundColor">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +34,8 @@
                     android:layout_marginEnd="16dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless" />
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="?attr/iconTint" />
 
                 <!-- TaskMaster Title -->
                 <TextView
@@ -44,7 +45,7 @@
                     android:text="TaskMaster"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_dark"
+                    android:textColor="?attr/textPrimary"
                     android:gravity="center" />
 
                 <!-- Notification Icon -->
@@ -52,11 +53,12 @@
                     android:id="@+id/iv_notification"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_notification"
+                    android:src="@drawable/ic_more_vert"
                     android:layout_marginStart="16dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless" />
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="?attr/iconTint" />
 
             </LinearLayout>
 
@@ -74,7 +76,7 @@
                     android:text="Hello Good Morning"
                     android:textSize="32sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_dark"
+                    android:textColor="?attr/textPrimary"
                     android:layout_marginBottom="4dp" />
 
                 <TextView
@@ -82,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="Pull down to refresh your tasks"
                     android:textSize="16sp"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -101,7 +103,7 @@
                     android:text="Monthly Preview"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_dark"
+                    android:textColor="?attr/textPrimary"
                     android:layout_marginBottom="16dp" />
 
                 <!-- Monthly Preview Cards - 3 cards layout -->
@@ -242,7 +244,7 @@
                     android:text="Progress"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_dark"
+                    android:textColor="?attr/textPrimary"
                     android:layout_marginBottom="16dp" />
 
                 <!-- Progress Tasks RecyclerView -->

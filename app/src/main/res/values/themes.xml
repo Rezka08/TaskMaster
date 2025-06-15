@@ -1,54 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Custom Attributes for Theme -->
-    <attr name="backgroundColor" format="color" />
-    <attr name="surfaceColor" format="color" />
-    <attr name="textPrimary" format="color" />
-    <attr name="textSecondary" format="color" />
-    <attr name="textTertiary" format="color" />
-    <attr name="iconTint" format="color" />
-    <attr name="iconTintPrimary" format="color" />
-
     <!-- Base Light Theme -->
     <style name="Base.Theme.TaskMaster" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary Colors -->
         <item name="colorPrimary">@color/purple_primary</item>
-        <item name="colorPrimaryVariant">@color/purple_primary</item>
+        <item name="colorPrimaryVariant">@color/purple_primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Secondary Colors -->
         <item name="colorSecondary">@color/purple_primary</item>
-        <item name="colorSecondaryVariant">@color/purple_primary</item>
+        <item name="colorSecondaryVariant">@color/purple_primary_dark</item>
         <item name="colorOnSecondary">@color/white</item>
 
         <!-- Background Colors -->
-        <item name="android:colorBackground">@color/light_purple_bg</item>
-        <item name="backgroundColor">@color/light_purple_bg</item>
-        <item name="colorSurface">@color/white</item>
-        <item name="surfaceColor">@color/white</item>
-        <item name="colorOnSurface">@color/text_dark</item>
+        <item name="android:colorBackground">@color/background_primary</item>
+        <item name="backgroundColor">@color/background_primary</item>
+        <item name="colorSurface">@color/surface_color</item>
+        <item name="surfaceColor">@color/surface_color</item>
+        <item name="colorOnSurface">@color/text_primary</item>
 
         <!-- Text Colors -->
-        <item name="textPrimary">@color/text_dark</item>
-        <item name="textSecondary">@color/text_gray</item>
-        <item name="textTertiary">@color/text_gray</item>
+        <item name="textPrimary">@color/text_primary</item>
+        <item name="textSecondary">@color/text_secondary</item>
+        <item name="textTertiary">@color/text_tertiary</item>
 
         <!-- Icon Colors -->
-        <item name="iconTint">@color/text_gray</item>
-        <item name="iconTintPrimary">@color/text_dark</item>
+        <item name="iconTint">@color/icon_tint</item>
+        <item name="iconTintPrimary">@color/icon_tint_primary</item>
 
         <!-- Status Bar -->
-        <item name="android:statusBarColor">@color/light_purple_bg</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/background_primary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:navigationBarColor">@color/background_primary</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o">true</item>
 
         <!-- Window Background -->
-        <item name="android:windowBackground">@color/light_purple_bg</item>
+        <item name="android:windowBackground">@color/background_primary</item>
 
         <!-- Ripple Effect -->
-        <item name="android:colorControlHighlight">@color/purple_primary</item>
+        <item name="android:colorControlHighlight">@color/ripple_color</item>
+        <item name="rippleColor">@color/ripple_color</item>
     </style>
 
     <style name="Theme.TaskMaster" parent="Base.Theme.TaskMaster" />
@@ -58,53 +50,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Card View Light Theme -->
-    <style name="CardView.Light" parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">@color/white</item>
-        <item name="cardElevation">2dp</item>
-        <item name="cardCornerRadius">12dp</item>
-    </style>
-
-    <!-- Button Light Theme -->
-    <style name="Button.Light" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/purple_primary</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <!-- Tab Layout Light Theme -->
-    <style name="TabLayout.Light" parent="Widget.MaterialComponents.TabLayout">
-        <item name="tabBackground">@color/white</item>
-        <item name="tabSelectedTextColor">@color/text_dark</item>
-        <item name="tabTextColor">@color/text_gray</item>
-        <item name="tabIndicatorColor">@color/purple_primary</item>
-    </style>
-
-    <!-- Text Input Light Theme -->
-    <style name="TextInputLayout.Light" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">@color/purple_primary</item>
-        <item name="android:textColorHint">@color/text_gray</item>
-        <item name="hintTextColor">@color/text_gray</item>
-    </style>
-
-    <!-- Bottom Navigation Light Theme -->
-    <style name="BottomNavigation.Light" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="backgroundTint">@color/white</item>
-        <item name="itemIconTint">@color/bottom_nav_color</item>
-        <item name="itemTextColor">@color/bottom_nav_color</item>
-    </style>
-
     <!-- Tab Text Appearance -->
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <!-- Chip Light Theme -->
-    <style name="Chip.Light" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/chip_unselected</item>
-        <item name="android:textColor">@color/text_dark</item>
-        <item name="chipStrokeColor">@color/purple_primary</item>
-        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/text_secondary</item>
     </style>
 
 </resources>

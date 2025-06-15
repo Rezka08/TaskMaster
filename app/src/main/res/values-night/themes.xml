@@ -6,12 +6,12 @@
         <!-- Primary Colors -->
         <item name="colorPrimary">@color/purple_primary</item>
         <item name="colorPrimaryVariant">@color/purple_primary_dark</item>
-        <item name="colorOnPrimary">@color/text_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
 
         <!-- Secondary Colors -->
         <item name="colorSecondary">@color/purple_primary</item>
         <item name="colorSecondaryVariant">@color/purple_primary_dark</item>
-        <item name="colorOnSecondary">@color/text_primary</item>
+        <item name="colorOnSecondary">@color/white</item>
 
         <!-- Background Colors -->
         <item name="android:colorBackground">@color/background_primary</item>
@@ -26,8 +26,8 @@
         <item name="textTertiary">@color/text_tertiary</item>
 
         <!-- Icon Colors -->
-        <item name="iconTint">@color/text_secondary</item>
-        <item name="iconTintPrimary">@color/text_primary</item>
+        <item name="iconTint">@color/icon_tint</item>
+        <item name="iconTintPrimary">@color/icon_tint_primary</item>
 
         <!-- Status Bar -->
         <item name="android:statusBarColor">@color/background_primary</item>
@@ -40,6 +40,7 @@
 
         <!-- Ripple Effect -->
         <item name="android:colorControlHighlight">@color/ripple_color</item>
+        <item name="rippleColor">@color/ripple_color</item>
     </style>
 
     <style name="Theme.TaskMaster" parent="Base.Theme.TaskMaster" />
@@ -49,69 +50,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Card View Dark Theme -->
-    <style name="CardView.Dark" parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">@color/surface_color</item>
-        <item name="cardElevation">4dp</item>
-        <item name="cardCornerRadius">12dp</item>
-    </style>
-
-    <!-- Button Dark Theme -->
-    <style name="Button.Dark" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/purple_primary</item>
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="rippleColor">@color/ripple_color</item>
-    </style>
-
-    <!-- Tab Layout Dark Theme -->
-    <style name="TabLayout.Dark" parent="Widget.MaterialComponents.TabLayout">
-        <item name="tabBackground">@color/surface_variant</item>
-        <item name="tabSelectedTextColor">@color/text_primary</item>
-        <item name="tabTextColor">@color/text_secondary</item>
-        <item name="tabIndicatorColor">@color/purple_primary</item>
-    </style>
-
-    <!-- Text Input Dark Theme -->
-    <style name="TextInputLayout.Dark" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">@color/purple_primary</item>
-        <item name="android:textColorHint">@color/text_secondary</item>
-        <item name="hintTextColor">@color/text_secondary</item>
-    </style>
-
-    <!-- Bottom Navigation Dark Theme -->
-    <style name="BottomNavigation.Dark" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="backgroundTint">@color/surface_color</item>
-        <item name="itemIconTint">@color/bottom_nav_color</item>
-        <item name="itemTextColor">@color/bottom_nav_color</item>
-    </style>
-
-    <!-- Toolbar Dark Theme -->
-    <style name="Toolbar.Dark" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="android:background">@color/surface_color</item>
-        <item name="titleTextColor">@color/text_primary</item>
-        <item name="subtitleTextColor">@color/text_secondary</item>
-    </style>
-
-    <!-- Divider Dark Theme -->
-    <style name="Divider.Dark">
-        <item name="android:background">@color/divider_color</item>
-        <item name="android:layout_height">1dp</item>
-    </style>
-
-    <!-- Tab Text Appearance Dark -->
+    <!-- Tab Text Appearance untuk Dark Mode -->
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_secondary</item>
-    </style>
-
-    <!-- Chip Dark Theme -->
-    <style name="Chip.Dark" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/chip_unselected</item>
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="chipStrokeColor">@color/divider_color</item>
-        <item name="chipStrokeWidth">1dp</item>
-        <item name="rippleColor">@color/ripple_color</item>
     </style>
 
 </resources>

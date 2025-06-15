@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom Theme Attributes -->
+    <attr name="surfaceColor" format="color" />
+    <attr name="textPrimary" format="color" />
+    <attr name="textSecondary" format="color" />
+    <attr name="textTertiary" format="color" />
+    <attr name="iconTint" format="color" />
+    <attr name="iconTintPrimary" format="color" />
+    <attr name="backgroundColor" format="color" />
+    <attr name="rippleColor" format="color" />
+</resources>
