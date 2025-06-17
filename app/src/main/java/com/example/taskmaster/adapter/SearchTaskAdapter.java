@@ -55,7 +55,8 @@ public class SearchTaskAdapter extends RecyclerView.Adapter<SearchTaskAdapter.Se
     }
 
     public void setSearchQuery(String query) {
-        this.searchQuery = query;
+        this.searchQuery = query != null ? query : "";
+        notifyDataSetChanged();
     }
 
     class SearchTaskViewHolder extends RecyclerView.ViewHolder {

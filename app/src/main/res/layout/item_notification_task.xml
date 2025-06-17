@@ -2,11 +2,10 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/TaskCardStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginVertical="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +18,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_task"
-            android:layout_marginEnd="12dp" />
+            android:layout_marginEnd="12dp"
+            app:tint="?attr/iconTint" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -29,26 +29,23 @@
 
             <TextView
                 android:id="@+id/tv_task_title"
+                style="@style/BodyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Design Changes"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_task_time"
+                style="@style/CaptionTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1 Days left"
-                android:textSize="14sp"
-                android:textColor="@color/text_gray" />
+                android:text="1 Days left" />
 
         </LinearLayout>
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            style="@style/IconStyle"
             android:src="@drawable/ic_more_vert" />
 
     </LinearLayout>

@@ -1,37 +1,34 @@
 package com.example.taskmaster.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import com.example.taskmaster.R;
 import com.example.taskmaster.utils.ThemeManager;
 
 public class SettingsActivity extends AppCompatActivity {
-
-    private ImageView ivBack;
+    private ThemeManager themeManager;
     private CardView cvLightMode, cvDarkMode, cvSystemMode;
     private ImageView ivLightCheck, ivDarkCheck, ivSystemCheck;
+    private ImageView ivBack;
     private TextView tvAppVersion;
-
-    private ThemeManager themeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         // Apply theme before setContentView
         themeManager = new ThemeManager(this);
         themeManager.applyTheme();
 
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
         initViews();
         setupClickListeners();
         updateThemeSelection();
+        setupAppVersion();
     }
 
     private void initViews() {
@@ -43,14 +40,6 @@ public class SettingsActivity extends AppCompatActivity {
         ivDarkCheck = findViewById(R.id.iv_dark_check);
         ivSystemCheck = findViewById(R.id.iv_system_check);
         tvAppVersion = findViewById(R.id.tv_app_version);
-
-        // Set app version
-        try {
-            String version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            tvAppVersion.setText("Version " + version);
-        } catch (Exception e) {
-            tvAppVersion.setText("Version 1.0");
-        }
     }
 
     private void setupClickListeners() {
@@ -59,48 +48,54 @@ public class SettingsActivity extends AppCompatActivity {
         cvLightMode.setOnClickListener(v -> {
             themeManager.setTheme(ThemeManager.THEME_LIGHT);
             updateThemeSelection();
-            recreateActivity();
+            // Recreate activity to apply theme immediately
+            recreate();
         });
 
         cvDarkMode.setOnClickListener(v -> {
             themeManager.setTheme(ThemeManager.THEME_DARK);
             updateThemeSelection();
-            recreateActivity();
+            // Recreate activity to apply theme immediately
+            recreate();
         });
 
         cvSystemMode.setOnClickListener(v -> {
             themeManager.setTheme(ThemeManager.THEME_SYSTEM);
             updateThemeSelection();
-            recreateActivity();
+            // Recreate activity to apply theme immediately
+            recreate();
         });
     }
 
     private void updateThemeSelection() {
-        // Reset all checkmarks
-        ivLightCheck.setVisibility(android.view.View.GONE);
-        ivDarkCheck.setVisibility(android.view.View.GONE);
-        ivSystemCheck.setVisibility(android.view.View.GONE);
-
-        // Show checkmark for current theme
         int currentTheme = themeManager.getCurrentTheme();
+
+        // Hide all check marks first
+        ivLightCheck.setVisibility(View.GONE);
+        ivDarkCheck.setVisibility(View.GONE);
+        ivSystemCheck.setVisibility(View.GONE);
+
+        // Show appropriate check mark
         switch (currentTheme) {
             case ThemeManager.THEME_LIGHT:
-                ivLightCheck.setVisibility(android.view.View.VISIBLE);
+                ivLightCheck.setVisibility(View.VISIBLE);
                 break;
             case ThemeManager.THEME_DARK:
-                ivDarkCheck.setVisibility(android.view.View.VISIBLE);
+                ivDarkCheck.setVisibility(View.VISIBLE);
                 break;
             case ThemeManager.THEME_SYSTEM:
-                ivSystemCheck.setVisibility(android.view.View.VISIBLE);
+                ivSystemCheck.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    private void recreateActivity() {
-        // Delay recreation to allow animation to complete
-        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-            recreate();
-        }, 200);
+    private void setupAppVersion() {
+        try {
+            String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            tvAppVersion.setText("Version " + versionName);
+        } catch (Exception e) {
+            tvAppVersion.setText("Version 1.0");
+        }
     }
 
     @Override

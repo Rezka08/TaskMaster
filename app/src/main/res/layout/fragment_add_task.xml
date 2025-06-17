@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:minHeight="0dp">
 
         <!-- Header -->
         <LinearLayout
@@ -118,15 +119,16 @@
 
         </LinearLayout>
 
-        <!-- White Bottom Section -->
+        <!-- White Bottom Section - EXPANDED TO FILL REMAINING SPACE -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="491dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@drawable/bottom_sheet_bg"
             android:orientation="vertical"
             android:paddingHorizontal="20dp"
             android:paddingTop="24dp"
-            android:paddingBottom="40dp">
+            android:paddingBottom="20dp">
 
             <!-- Time Section -->
             <LinearLayout
@@ -149,7 +151,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="Start Time"
-                        android:textColor="@color/text_gray"
+                        android:textColor="?attr/textSecondary"
                         android:textSize="14sp" />
 
                     <TextView
@@ -159,10 +161,13 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:text="Select time"
-                        android:textColor="@color/text_dark"
+                        android:textColor="?attr/textPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:background="?attr/selectableItemBackground" />
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="8dp"
+                        android:minHeight="48dp"
+                        android:gravity="center_vertical" />
 
                 </LinearLayout>
 
@@ -179,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="End Time"
-                        android:textColor="@color/text_gray"
+                        android:textColor="?attr/textSecondary"
                         android:textSize="14sp" />
 
                     <TextView
@@ -189,10 +194,13 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:text="Select time"
-                        android:textColor="@color/text_dark"
+                        android:textColor="?attr/textPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:background="?attr/selectableItemBackground" />
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="8dp"
+                        android:minHeight="48dp"
+                        android:gravity="center_vertical" />
 
                 </LinearLayout>
 
@@ -210,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="Description"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:textSize="14sp" />
 
                 <EditText
@@ -221,8 +229,8 @@
                     android:gravity="top"
                     android:hint="Enter task description (optional)"
                     android:minLines="3"
-                    android:textColor="@color/text_dark"
-                    android:textColorHint="@color/text_gray"
+                    android:textColor="?attr/textPrimary"
+                    android:textColorHint="?attr/textSecondary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -239,7 +247,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:text="Category"
-                    android:textColor="@color/text_gray"
+                    android:textColor="?attr/textSecondary"
                     android:textSize="14sp" />
 
                 <!-- Category Chips -->
@@ -258,6 +266,12 @@
 
             </LinearLayout>
 
+            <!-- Spacer to push button to bottom -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
             <!-- Create Task Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_create_task"
@@ -268,7 +282,8 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/purple_primary"
-                app:cornerRadius="28dp" />
+                app:cornerRadius="28dp"
+                android:layout_marginBottom="16dp" />
 
         </LinearLayout>
 

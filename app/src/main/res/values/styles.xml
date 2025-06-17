@@ -67,6 +67,19 @@
         <item name="tint">?attr/iconTint</item>
     </style>
 
+    <!-- Time Text Style for Create/Edit Task -->
+    <style name="TimeTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/textPrimary</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
     <!-- Edit Text Styles -->
     <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/purple_primary</item>
@@ -99,16 +112,21 @@
         <item name="itemIconTint">@color/bottom_nav_color</item>
         <item name="itemTextColor">@color/bottom_nav_color</item>
         <item name="elevation">8dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
     </style>
 
-    <!-- Chip Style -->
+    <!-- Chip Style - Updated for Dark Mode -->
     <style name="CategoryChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">?attr/surfaceColor</item>
-        <item name="android:textColor">?attr/textPrimary</item>
+        <item name="chipBackgroundColor">@color/chip_background_color_selector</item>
+        <item name="android:textColor">@color/chip_text_color_selector</item>
         <item name="chipStrokeColor">?attr/colorOutline</item>
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipCornerRadius">16dp</item>
         <item name="android:textSize">14sp</item>
+        <item name="chipMinHeight">40dp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Progress Card Styles -->
@@ -144,6 +162,12 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?attr/textTertiary</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Bottom Navigation Text Style -->
+    <style name="BottomNavigationTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

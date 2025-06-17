@@ -53,7 +53,7 @@
                     android:id="@+id/iv_notification"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_more_vert"
+                    android:src="@drawable/ic_notification"
                     android:layout_marginStart="16dp"
                     android:clickable="true"
                     android:focusable="true"

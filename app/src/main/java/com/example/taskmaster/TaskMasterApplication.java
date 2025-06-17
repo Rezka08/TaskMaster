@@ -12,4 +12,16 @@ public class TaskMasterApplication extends Application {
         // Initialize theme on app startup
         ThemeManager.initializeTheme(this);
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        // Clean up database connections if needed
+        try {
+            com.example.taskmaster.database.DatabaseHelper.closeDatabase();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

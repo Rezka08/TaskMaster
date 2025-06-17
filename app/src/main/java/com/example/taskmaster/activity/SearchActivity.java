@@ -114,6 +114,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void searchTasks(String query) {
+        // Update search query in adapter for highlighting
+        searchTaskAdapter.setSearchQuery(query);
+
         taskViewModel.searchTasks(query, new DatabaseListCallback<Task>() {
             @Override
             public void onSuccess(List<Task> tasks) {

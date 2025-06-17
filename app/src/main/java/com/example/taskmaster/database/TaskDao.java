@@ -36,8 +36,13 @@ public class TaskDao {
             e.printStackTrace();
             return -1;
         } finally {
-            if (db != null && db.isOpen()) {
-                db.close();
+            // Safe closing - only close if db is open and not the same instance
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -65,8 +70,12 @@ public class TaskDao {
             e.printStackTrace();
             return 0;
         } finally {
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -82,8 +91,12 @@ public class TaskDao {
             e.printStackTrace();
             return 0;
         } finally {
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -107,10 +120,18 @@ public class TaskDao {
             return null;
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -139,10 +160,18 @@ public class TaskDao {
             e.printStackTrace();
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
         return tasks;
@@ -172,10 +201,18 @@ public class TaskDao {
             e.printStackTrace();
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
         return tasks;
@@ -207,10 +244,18 @@ public class TaskDao {
             e.printStackTrace();
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
         return tasks;
@@ -241,10 +286,18 @@ public class TaskDao {
             e.printStackTrace();
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
         return tasks;
@@ -274,10 +327,18 @@ public class TaskDao {
             e.printStackTrace();
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
         return tasks;
@@ -309,10 +370,18 @@ public class TaskDao {
             e.printStackTrace();
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
         return tasks;
@@ -338,10 +407,18 @@ public class TaskDao {
             return 0;
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -366,10 +443,18 @@ public class TaskDao {
             return 0;
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -402,10 +487,18 @@ public class TaskDao {
             return 0;
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -430,10 +523,18 @@ public class TaskDao {
             return 0;
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -458,10 +559,18 @@ public class TaskDao {
             return 0;
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
     }
@@ -492,10 +601,18 @@ public class TaskDao {
             e.printStackTrace();
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
             }
-            if (db != null && db.isOpen()) {
-                db.close();
+            try {
+                if (db != null && db.isOpen()) {
+                    db.close();
+                }
+            } catch (Exception e) {
+                // Ignore closing errors
             }
         }
         return tasks;

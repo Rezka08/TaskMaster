@@ -2,14 +2,10 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/TaskCardStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_marginVertical="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,11 +16,10 @@
         <!-- Task Title -->
         <TextView
             android:id="@+id/tv_task_title"
+            style="@style/BodyTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/text_dark"
             android:layout_marginBottom="4dp"
             android:maxLines="2"
             android:ellipsize="end" />
@@ -32,10 +27,9 @@
         <!-- Task Description -->
         <TextView
             android:id="@+id/tv_task_description"
+            style="@style/CaptionTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_gray"
             android:layout_marginBottom="8dp"
             android:maxLines="2"
             android:ellipsize="end"
@@ -50,19 +44,17 @@
 
             <TextView
                 android:id="@+id/tv_task_date"
+                style="@style/SmallTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="12sp"
-                android:textColor="@color/text_gray"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_task_time"
+                style="@style/SmallTextStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/text_gray" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

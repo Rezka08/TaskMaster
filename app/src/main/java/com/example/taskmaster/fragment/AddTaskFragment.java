@@ -105,6 +105,15 @@ public class AddTaskFragment extends Fragment {
             chip.setCheckable(true);
             chip.setId(category.getId());
 
+            // Apply custom style for consistent theming
+            chip.setChipBackgroundColorResource(R.color.chip_background_color_selector);
+            chip.setTextColor(getResources().getColorStateList(R.color.chip_text_color_selector));
+            chip.setChipStrokeColorResource(R.color.chip_stroke_color_selector);
+            chip.setChipStrokeWidth(2f);
+            chip.setChipCornerRadius(16f);
+            chip.setTextSize(14f);
+            chip.setMinHeight((int) (40 * getResources().getDisplayMetrics().density));
+
             if (category.getId() == selectedCategoryId) {
                 chip.setChecked(true);
             }
@@ -154,6 +163,7 @@ public class AddTaskFragment extends Fragment {
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                R.style.CustomDatePickerTheme, // Use custom theme for consistent styling
                 (view, year, month, dayOfMonth) -> {
                     selectedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
                     tvTaskDate.setText(selectedDate);
@@ -170,6 +180,7 @@ public class AddTaskFragment extends Fragment {
     private void showStartTimePicker() {
         Calendar calendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                R.style.CustomTimePickerTheme, // Use custom theme for consistent styling
                 (view, hourOfDay, minute) -> {
                     selectedStartTime = String.format("%02d:%02d", hourOfDay, minute);
                     tvStartTime.setText(selectedStartTime);
@@ -194,6 +205,7 @@ public class AddTaskFragment extends Fragment {
     private void showEndTimePicker() {
         Calendar calendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                R.style.CustomTimePickerTheme, // Use custom theme for consistent styling
                 (view, hourOfDay, minute) -> {
                     selectedEndTime = String.format("%02d:%02d", hourOfDay, minute);
                     tvEndTime.setText(selectedEndTime);

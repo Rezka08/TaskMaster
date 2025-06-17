@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/light_purple_bg">
+    android:background="?attr/backgroundColor">
 
     <!-- Header -->
     <LinearLayout
@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         android:padding="20dp"
         android:gravity="center_vertical"
-        android:background="@color/white">
+        android:background="?attr/surfaceColor">
 
         <!-- Back Button -->
         <ImageView
@@ -26,17 +26,15 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/text_gray" />
+            app:tint="?attr/iconTint" />
 
         <!-- Title -->
         <TextView
+            style="@style/HeaderTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Settings"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_dark" />
+            android:text="Settings" />
 
     </LinearLayout>
 
@@ -54,26 +52,19 @@
 
             <!-- Theme Section -->
             <TextView
+                style="@style/SubHeaderTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Theme"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark"
                 android:layout_marginBottom="16dp" />
 
             <!-- Light Mode Option -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_light_mode"
+                style="@style/TaskCardStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/white">
+                android:layout_marginBottom="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -88,7 +79,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_light_mode"
                         android:layout_marginEnd="16dp"
-                        app:tint="@color/text_gray" />
+                        app:tint="?attr/iconTint" />
 
                     <!-- Text Content -->
                     <LinearLayout
@@ -98,19 +89,17 @@
                         android:orientation="vertical">
 
                         <TextView
+                            style="@style/BodyTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Light Mode"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_dark" />
+                            android:textStyle="bold" />
 
                         <TextView
+                            style="@style/CaptionTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Classic bright theme"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_gray"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
@@ -131,15 +120,10 @@
             <!-- Dark Mode Option -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_dark_mode"
+                style="@style/TaskCardStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/white">
+                android:layout_marginBottom="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -154,7 +138,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_dark_mode"
                         android:layout_marginEnd="16dp"
-                        app:tint="@color/text_gray" />
+                        app:tint="?attr/iconTint" />
 
                     <!-- Text Content -->
                     <LinearLayout
@@ -164,19 +148,17 @@
                         android:orientation="vertical">
 
                         <TextView
+                            style="@style/BodyTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Dark Mode"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_dark" />
+                            android:textStyle="bold" />
 
                         <TextView
+                            style="@style/CaptionTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Easy on the eyes"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_gray"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
@@ -197,15 +179,10 @@
             <!-- System Mode Option -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_system_mode"
+                style="@style/TaskCardStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/white">
+                android:layout_marginBottom="32dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -220,7 +197,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_auto_mode"
                         android:layout_marginEnd="16dp"
-                        app:tint="@color/text_gray" />
+                        app:tint="?attr/iconTint" />
 
                     <!-- Text Content -->
                     <LinearLayout
@@ -230,19 +207,17 @@
                         android:orientation="vertical">
 
                         <TextView
+                            style="@style/BodyTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Follow System"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_dark" />
+                            android:textStyle="bold" />
 
                         <TextView
+                            style="@style/CaptionTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Adapts to system theme"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_gray"
                             android:layout_marginTop="2dp" />
 
                     </LinearLayout>
@@ -262,22 +237,18 @@
 
             <!-- About Section -->
             <TextView
+                style="@style/SubHeaderTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="About"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark"
                 android:layout_marginBottom="16dp" />
 
             <!-- App Info Card -->
             <androidx.cardview.widget.CardView
+                style="@style/TaskCardStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
+                android:layout_marginBottom="32dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -295,31 +266,27 @@
 
                     <!-- App Name -->
                     <TextView
+                        style="@style/SubHeaderTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TaskMaster"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"
                         android:layout_marginBottom="4dp" />
 
                     <!-- App Version -->
                     <TextView
                         android:id="@+id/tv_app_version"
+                        style="@style/CaptionTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Version 1.0"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_gray"
                         android:layout_marginBottom="8dp" />
 
                     <!-- Description -->
                     <TextView
+                        style="@style/CaptionTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Your personal productivity companion"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_gray"
                         android:gravity="center" />
 
                 </LinearLayout>

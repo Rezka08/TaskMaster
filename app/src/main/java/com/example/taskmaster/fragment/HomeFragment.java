@@ -2,8 +2,6 @@ package com.example.taskmaster.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,69 +14,49 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.taskmaster.R;
 import com.example.taskmaster.activity.NotificationActivity;
 import com.example.taskmaster.activity.SearchActivity;
-import com.example.taskmaster.R;
 import com.example.taskmaster.adapter.ProgressTaskAdapter;
-import com.example.taskmaster.callback.DatabaseListCallback;
 import com.example.taskmaster.callback.DatabaseCountCallback;
+import com.example.taskmaster.callback.DatabaseListCallback;
 import com.example.taskmaster.model.Task;
 import com.example.taskmaster.utils.DateUtils;
 import com.example.taskmaster.viewmodel.TaskViewModel;
+
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class HomeFragment extends Fragment {
     private TaskViewModel taskViewModel;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvProgressTasks;
     private ProgressTaskAdapter progressTaskAdapter;
-    private ImageView ivSearch, ivNotification;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
-    // Monthly Preview TextViews
+    // Header Views
+    private ImageView ivSearch, ivNotification;
+
+    // Monthly Preview Views
     private TextView tvDoneCount, tvUpcomingCount, tvProgressCount;
 
-    // Handler for UI updates
-    private Handler mainHandler;
-
-    // Loading state management with atomic operations
-    private volatile boolean isFragmentReady = false;
-    private AtomicInteger loadingCounter = new AtomicInteger(0);
-    private final int TOTAL_LOADING_OPERATIONS = 4; // We have 4 async operations
-
-    // Data cache to prevent data loss
-    private volatile int cachedCompletedCount = 0;
-    private volatile int cachedUpcomingCount = 0;
-    private volatile int cachedProgressCount = 0;
-    private volatile List<Task> cachedProgressTasks = null;
-
-    // Loading flags for each operation
-    private volatile boolean completedCountLoaded = false;
-    private volatile boolean upcomingCountLoaded = false;
-    private volatile boolean progressCountLoaded = false;
-    private volatile boolean progressTasksLoaded = false;
+    private String currentDate;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        currentDate = DateUtils.getCurrentDate();
+
         initViews(view);
-        setupSwipeRefresh();
         setupRecyclerView();
         setupViewModel();
         setupClickListeners();
+        setupSwipeRefresh();
+
+        loadData();
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        isFragmentReady = true;
-
-        // Load data immediately when view is created
-        startLoadingAllData();
     }
 
     private void initViews(View view) {
@@ -86,31 +64,9 @@ public class HomeFragment extends Fragment {
         rvProgressTasks = view.findViewById(R.id.rv_progress_tasks);
         ivSearch = view.findViewById(R.id.iv_search);
         ivNotification = view.findViewById(R.id.iv_notification);
-
-        // Initialize Monthly Preview TextViews
         tvDoneCount = view.findViewById(R.id.tv_done_count);
         tvUpcomingCount = view.findViewById(R.id.tv_upcoming_count);
         tvProgressCount = view.findViewById(R.id.tv_progress_count);
-
-        // Initialize handler
-        mainHandler = new Handler(Looper.getMainLooper());
-
-        // Set cached values immediately to prevent 0 display
-        updateUIWithCachedData();
-    }
-
-    private void setupSwipeRefresh() {
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setColorSchemeResources(
-                    R.color.purple_primary,
-                    R.color.upcoming_blue,
-                    R.color.progress_orange
-            );
-
-            swipeRefreshLayout.setOnRefreshListener(() -> {
-                refreshAllData();
-            });
-        }
     }
 
     private void setupRecyclerView() {
@@ -119,16 +75,11 @@ public class HomeFragment extends Fragment {
             // Navigate to Task Detail
             Intent intent = new Intent(getContext(), com.example.taskmaster.activity.TaskDetailActivity.class);
             intent.putExtra("task_id", task.getId());
-            startActivity(intent);
+            startActivityForResult(intent, 1001);
         });
 
         rvProgressTasks.setLayoutManager(new LinearLayoutManager(getContext()));
         rvProgressTasks.setAdapter(progressTaskAdapter);
-
-        // Set cached tasks if available
-        if (cachedProgressTasks != null) {
-            progressTaskAdapter.setTasks(cachedProgressTasks);
-        }
     }
 
     private void setupViewModel() {
@@ -147,260 +98,140 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    /**
-     * Start loading all data with proper synchronization
-     */
-    private void startLoadingAllData() {
-        if (!isFragmentReady || !isAdded() || getContext() == null) {
-            return;
-        }
+    private void setupSwipeRefresh() {
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.purple_primary,
+                R.color.purple_primary_dark,
+                R.color.purple_primary_light
+        );
 
-        // Reset loading states
-        loadingCounter.set(0);
-        resetLoadingFlags();
-
-        String currentDate = DateUtils.getCurrentDate();
-
-        // Start all loading operations
-        loadCompletedAndOverdueTasksCount();
-        loadUpcomingTasksCount(currentDate);
-        loadInProgressTasksCount(currentDate);
-        loadInProgressTasksList(currentDate);
+        swipeRefreshLayout.setOnRefreshListener(this::loadData);
     }
 
-    /**
-     * Refresh all data (called by swipe refresh)
-     */
-    private void refreshAllData() {
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshing(true);
-        }
-
-        startLoadingAllData();
+    private void loadData() {
+        loadMonthlyPreview();
+        loadProgressTasks();
     }
 
-    private void resetLoadingFlags() {
-        completedCountLoaded = false;
-        upcomingCountLoaded = false;
-        progressCountLoaded = false;
-        progressTasksLoaded = false;
-    }
-
-    private void loadCompletedAndOverdueTasksCount() {
-        if (!isAdded()) return;
-
-        taskViewModel.getCompletedAndOverdueTasksCount(new DatabaseCountCallback() {
+    private void loadMonthlyPreview() {
+        // Load Done Count (Completed + Overdue tasks)
+        taskViewModel.getCompletedAndOverdueTasksCount(currentDate, new DatabaseCountCallback() {
             @Override
             public void onSuccess(Integer count) {
-                if (isAdded() && isFragmentReady) {
-                    cachedCompletedCount = count != null ? count : 0;
-                    completedCountLoaded = true;
-
-                    updateUIOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        tvDoneCount.setText(String.valueOf(count));
+                    });
                 }
             }
 
             @Override
             public void onError(String error) {
-                if (isAdded() && isFragmentReady) {
-                    // Keep cached value, don't reset to 0
-                    completedCountLoaded = true;
-
-                    updateUIOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        tvDoneCount.setText("0");
+                    });
                 }
             }
         });
-    }
 
-    private void loadUpcomingTasksCount(String currentDate) {
-        if (!isAdded()) return;
-
+        // Load Upcoming Count
         taskViewModel.getUpcomingTasksCount(currentDate, new DatabaseCountCallback() {
             @Override
             public void onSuccess(Integer count) {
-                if (isAdded() && isFragmentReady) {
-                    cachedUpcomingCount = count != null ? count : 0;
-                    upcomingCountLoaded = true;
-
-                    updateUIOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        tvUpcomingCount.setText(String.valueOf(count));
+                    });
                 }
             }
 
             @Override
             public void onError(String error) {
-                if (isAdded() && isFragmentReady) {
-                    // Keep cached value, don't reset to 0
-                    upcomingCountLoaded = true;
-
-                    updateUIOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        tvUpcomingCount.setText("0");
+                    });
                 }
             }
         });
-    }
 
-    private void loadInProgressTasksCount(String currentDate) {
-        if (!isAdded()) return;
-
+        // Load Progress Count (Today's tasks)
         taskViewModel.getInProgressTasksCount(currentDate, new DatabaseCountCallback() {
             @Override
             public void onSuccess(Integer count) {
-                if (isAdded() && isFragmentReady) {
-                    cachedProgressCount = count != null ? count : 0;
-                    progressCountLoaded = true;
-
-                    updateUIOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        tvProgressCount.setText(String.valueOf(count));
+                    });
                 }
             }
 
             @Override
             public void onError(String error) {
-                if (isAdded() && isFragmentReady) {
-                    // Keep cached value, don't reset to 0
-                    progressCountLoaded = true;
-
-                    updateUIOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        tvProgressCount.setText("0");
+                    });
                 }
             }
         });
     }
 
-    private void loadInProgressTasksList(String currentDate) {
-        if (!isAdded()) return;
-
+    private void loadProgressTasks() {
         taskViewModel.getInProgressTasks(currentDate, new DatabaseListCallback<Task>() {
             @Override
             public void onSuccess(List<Task> tasks) {
-                if (isAdded() && isFragmentReady) {
-                    cachedProgressTasks = tasks;
-                    progressTasksLoaded = true;
-
-                    updateTasksListOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        progressTaskAdapter.setTasks(tasks);
+                        swipeRefreshLayout.setRefreshing(false);
+                    });
                 }
             }
 
             @Override
             public void onError(String error) {
-                if (isAdded() && isFragmentReady) {
-                    // Keep cached tasks, don't clear them
-                    progressTasksLoaded = true;
-
-                    updateTasksListOnMainThread();
-                    checkAllDataLoaded();
+                if (getActivity() != null && isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        progressTaskAdapter.setTasks(null);
+                        swipeRefreshLayout.setRefreshing(false);
+                    });
                 }
             }
         });
     }
 
-    /**
-     * Check if all data loading operations are complete
-     */
-    private void checkAllDataLoaded() {
-        if (completedCountLoaded && upcomingCountLoaded &&
-                progressCountLoaded && progressTasksLoaded) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-            // All data loaded, hide refresh indicator
-            if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-                mainHandler.post(() -> {
-                    if (swipeRefreshLayout != null) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+        // Refresh data when returning from TaskDetailActivity if data changed
+        if (requestCode == 1001 && resultCode == getActivity().RESULT_OK) {
+            if (data != null && data.getBooleanExtra("data_changed", false)) {
+                loadData();
             }
-        }
-    }
-
-    /**
-     * Update UI with cached data immediately
-     */
-    private void updateUIWithCachedData() {
-        if (tvDoneCount != null) {
-            tvDoneCount.setText(String.valueOf(cachedCompletedCount));
-        }
-        if (tvUpcomingCount != null) {
-            tvUpcomingCount.setText(String.valueOf(cachedUpcomingCount));
-        }
-        if (tvProgressCount != null) {
-            tvProgressCount.setText(String.valueOf(cachedProgressCount));
-        }
-    }
-
-    /**
-     * Update monthly preview UI on main thread with cached data
-     */
-    private void updateUIOnMainThread() {
-        if (!isAdded() || !isFragmentReady) return;
-
-        if (mainHandler != null) {
-            mainHandler.post(() -> {
-                if (isAdded() && isFragmentReady) {
-                    updateUIWithCachedData();
-                }
-            });
-        }
-    }
-
-    /**
-     * Update tasks list on main thread with cached data
-     */
-    private void updateTasksListOnMainThread() {
-        if (!isAdded() || !isFragmentReady) return;
-
-        if (mainHandler != null) {
-            mainHandler.post(() -> {
-                if (isAdded() && isFragmentReady && progressTaskAdapter != null) {
-                    progressTaskAdapter.setTasks(cachedProgressTasks);
-                }
-            });
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        // Small delay to ensure fragment is fully visible, then refresh
-        if (mainHandler != null) {
-            mainHandler.postDelayed(() -> {
-                if (isAdded() && isFragmentReady) {
-                    startLoadingAllData();
-                }
-            }, 200);
-        }
+        // Refresh data when fragment resumes
+        loadData();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        // Don't reset data when pausing, keep cache
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        isFragmentReady = false;
-
-        // Clean up handlers
-        if (mainHandler != null) {
-            mainHandler.removeCallbacksAndMessages(null);
-        }
-
-        // Don't clear cached data, keep it for next time
-    }
-
+    /**
+     * Public method to refresh data - can be called from MainActivity
+     */
     public void refreshData() {
-        if (isFragmentReady && mainHandler != null) {
-            mainHandler.postDelayed(() -> {
-                if (isAdded() && isFragmentReady) {
-                    startLoadingAllData();
-                }
-            }, 100);
-        }
+        loadData();
+    }
+
+    /**
+     * Interface for MainActivity to handle data changes
+     */
+    public interface OnDataChangedListener {
+        void onDataChanged();
     }
 }
