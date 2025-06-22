@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="?attr/colorSurface">
+    android:background="@color/dark_gray_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="20dp"
-            android:background="?attr/colorPrimary"
             android:gravity="center_vertical">
 
             <TextView
@@ -29,7 +28,7 @@
                 android:text="Edit Task"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnPrimary"
+                android:textColor="@color/white"
                 android:gravity="center" />
 
         </LinearLayout>
@@ -39,15 +38,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="20dp"
-            android:paddingTop="24dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
                 android:textSize="16sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="@color/white_70"
                 android:layout_marginBottom="8dp" />
 
             <EditText
@@ -58,58 +56,63 @@
                 android:hint="Enter task name"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                android:paddingBottom="8dp" />
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_70"
+                android:padding="0dp"
+                android:layout_marginBottom="4dp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/colorOutline" />
+                android:background="@color/white_30" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textSize="16sp"
+                android:textColor="@color/white_70"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tv_task_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select date"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:padding="0dp"
+                android:layout_marginBottom="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/white_30" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@drawable/bottom_sheet_bg"
             android:orientation="vertical"
             android:paddingHorizontal="20dp"
-            android:paddingTop="16dp"
+            android:paddingTop="24dp"
             android:paddingBottom="20dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="24dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date"
-                    android:textSize="16sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/tv_task_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Select date"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurface"
-                    android:paddingBottom="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/colorOutline" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -121,7 +124,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -130,18 +133,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="Start Time"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="?attr/textSecondary"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_start_time"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
                         android:text="Select time"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
+                        android:textColor="?attr/textPrimary"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:background="?attr/selectableItemBackground"
                         android:padding="8dp"
@@ -152,7 +155,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -161,18 +164,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="End Time"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="?attr/textSecondary"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_end_time"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
                         android:text="Select time"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
+                        android:textColor="?attr/textPrimary"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:background="?attr/selectableItemBackground"
                         android:padding="8dp"
@@ -192,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="Description"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="?attr/textSecondary"
                     android:textSize="14sp" />
 
                 <EditText
@@ -203,8 +206,8 @@
                     android:gravity="top"
                     android:hint="Enter task description (optional)"
                     android:minLines="3"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textColorHint="?attr/colorOnSurfaceVariant"
+                    android:textColor="?attr/textPrimary"
+                    android:textColorHint="?attr/textSecondary"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -219,7 +222,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:text="Category"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="?attr/textSecondary"
                     android:textSize="14sp" />
 
                 <com.google.android.material.chip.ChipGroup
@@ -243,10 +246,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="Update Task"
-                android:textColor="?attr/colorOnPrimary"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:backgroundTint="?attr/colorPrimary"
+                app:backgroundTint="@color/purple_primary"
                 app:cornerRadius="28dp"
                 android:layout_marginBottom="8dp" />
 
@@ -260,6 +263,7 @@
                 android:textSize="16sp"
                 app:cornerRadius="28dp"
                 android:layout_marginBottom="16dp" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
