@@ -3,9 +3,9 @@
 ## Aplikasi Manajemen Tugas dan Jadwal
 
 
-<div style="margin-right:10px; flex:0 0 auto; text-align:center">
+<p style="margin-right:10px; flex:0 0 auto; text-align:center" align="center">
     <img src="app\src\main\res\drawable\ic_app.png" alt="Widget" style="width:200px; height:auto;"/>
-</div>
+</p>
 
 **TaskMaster** adalah aplikasi Android native yang dirancang untuk membantu mahasiswa dan profesional mengorganisir dan melacak tugas dengan visualisasi berbasis prioritas dan waktu. Aplikasi ini fokus pada kemudahan penggunaan dan visualisasi yang jelas untuk membantu pengguna mengelola jadwal mereka dengan lebih efektif.
 
@@ -126,78 +126,49 @@
 - **Consistent Branding**: Warna primer dan aksen tetap konsisten di kedua theme
 
 ### Komponen UI Utama
-- **Light Mode**
 
-<div style="overflow-x:auto; white-space:nowrap; display:flex;">
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Light-HomeFragment.png" alt="Home" style="width:200px; height:auto;"/>
-        <p><strong>Home Fragment</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Light-AddTaskFragment.png" alt="Add" style="width:200px; height:auto;"/>
-        <p><strong>Add Task Fragment</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Light-CalenderFragment.png" alt="Calendar" style="width:200px; height:auto;"/>
-        <p><strong>Calendar Fragment</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Light-SearchActivity.png" alt="Search" style="width:200px; height:auto;"/>
-        <p><strong>Search Activity</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Light-NotificationActivity.png" alt="Notification" style="width:200px; height:auto;"/>
-        <p><strong>Notification Activity</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Light-DetailTaskActivity.png" alt="Widget" style="width:200px; height:auto;"/>
-        <p><strong>Detail Task Activity</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Light-SettingsActivity.png" alt="Settings" style="width:200px; height:auto;"/>
-        <p><strong>Settings Activity</strong></p>
-    </div>
+<div align="center" style="overflow-x:auto;">
+    <table style="border:none;">
+        <tr style="background:none; border:none;">
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/Light-HomeFragment.png" alt="Home" style="width:200px; height:auto;"/><br>
+                <strong>Home Fragment</strong>
+            </td>
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/Light-AddTaskFragment.png" alt="Add" style="width:200px; height:auto;"/><br>
+                <strong>Add Task Fragment</strong>
+            </td>
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/Light-CalenderFragment.png" alt="Calendar" style="width:200px; height:auto;"/><br>
+                <strong>Calendar Fragment</strong>
+            </td>
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/Light-SearchActivity.png" alt="Calendar" style="width:200px; height:auto;"/><br>
+                <strong>Search Fragment</strong>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr style="background:none; border:none;">
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/Light-NotificationActivity.png" alt="Notification" style="width:200px; height:auto;"/><br>
+                <strong>Notification Activity</strong>
+            </td>
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/Light-DetailTaskActivity.png" alt="Widget" style="width:200px; height:auto;"/><br>
+                <strong>Detail Task Activity</strong>
+            </td>
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/Light-SettingsActivity.png" alt="Settings" style="width:200px; height:auto;"/><br>
+                <strong>Settings Activity</strong>
+            </td>
+            <td align="center" style="border:none; padding:10px;">
+                <img src="readme/WidgetHomescreen.png" alt="Widget" style="width:200px; height:auto;"/><br>
+                <strong>Widget</strong>
+            </td>
+        </tr>
+    </table>
 </div>
-
-- **Dark Mode**
-
-<div style="overflow-x:auto; white-space:nowrap; display:flex;">
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Dark-HomeFragment.png" alt="Home" style="width:200px; height:auto;"/>
-        <p><strong>Home Fragment</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Dark-AddTaskFragment.png" alt="Add" style="width:200px; height:auto;"/>
-        <p><strong>Add Task Fragment</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Dark-CalenderFragmenr.png" alt="Calendar" style="width:200px; height:auto;"/>
-        <p><strong>Calendar Fragment</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Dark-SearchActivity.png" alt="Search" style="width:200px; height:auto;"/>
-        <p><strong>Search Activity</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Dark-NotificationActivity.png" alt="Notification" style="width:200px; height:auto;"/>
-        <p><strong>Notification Activity</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Dark-DetailTaskActivity.png" alt="Widget" style="width:200px; height:auto;"/>
-        <p><strong>Detail Task Activity</strong></p>
-    </div>
-    <div style="margin-right:10px; flex:0 0 auto; text-align:center;">
-        <img src="readme/Dark-SettingsActivity.png" alt="Settings" style="width:200px; height:auto;"/>
-        <p><strong>Settings Activity</strong></p>
-    </div>
-</div>
-
-- **Widget**
-
-<div style="margin-right:10px; flex:0 0 auto; text-align:center">
-    <img src="readme/WidgetHomescreen.png" alt="Widget" style="width:200px; height:auto;"/>
-</div>
-
 
 ## 📋 Permasalahan yang Diselesaikan
 
@@ -315,10 +286,6 @@ Kami menyambut kontribusi untuk pengembangan TaskMaster! Silakan:
 3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
 4. Push ke branch (`git push origin feature/AmazingFeature`)
 5. Buat Pull Request
-
-## 📄 Lisensi
-
-Project ini dilisensikan di bawah [MIT License](LICENSE).
 
 ## 👥 Tim Pengembang
 
