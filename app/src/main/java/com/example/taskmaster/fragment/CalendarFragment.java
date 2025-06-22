@@ -38,7 +38,6 @@ public class CalendarFragment extends Fragment {
     private CalendarDayAdapter calendarDayAdapter;
     private TextView tvMonthYear;
     private ImageView ivBack, ivSearch, ivForward;
-    private MaterialButton btnSettings;
 
     private String selectedDate = "";
     private Calendar currentCalendar;
@@ -64,7 +63,6 @@ public class CalendarFragment extends Fragment {
         ivBack = view.findViewById(R.id.iv_back);
         ivSearch = view.findViewById(R.id.iv_search);
         ivForward = view.findViewById(R.id.iv_forward);
-        btnSettings = view.findViewById(R.id.btn_settings);
 
         currentCalendar = Calendar.getInstance();
         selectedDate = DateUtils.getCurrentDate();
@@ -119,17 +117,6 @@ public class CalendarFragment extends Fragment {
         ivSearch.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), SearchActivity.class);
             startActivity(intent);
-        });
-
-        // NEW: Settings button click listener
-        btnSettings.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), SettingsActivity.class);
-            startActivity(intent);
-
-            // Add smooth transition
-            if (getActivity() != null) {
-                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            }
         });
     }
 

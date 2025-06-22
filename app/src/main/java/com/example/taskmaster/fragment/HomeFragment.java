@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
     private ProgressTaskAdapter progressTaskAdapter;
 
     // Header Views
-    private ImageView ivSearch, ivNotification;
+    private ImageView ivNotification, ivSettings;
 
     // Monthly Preview Views
     private TextView tvDoneCount, tvUpcomingCount, tvProgressCount;
@@ -62,8 +62,8 @@ public class HomeFragment extends Fragment {
     private void initViews(View view) {
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         rvProgressTasks = view.findViewById(R.id.rv_progress_tasks);
-        ivSearch = view.findViewById(R.id.iv_search);
         ivNotification = view.findViewById(R.id.iv_notification);
+        ivSettings = view.findViewById(R.id.iv_settings);
         tvDoneCount = view.findViewById(R.id.tv_done_count);
         tvUpcomingCount = view.findViewById(R.id.tv_upcoming_count);
         tvProgressCount = view.findViewById(R.id.tv_progress_count);
@@ -87,9 +87,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        ivSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), SearchActivity.class);
+        ivSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), com.example.taskmaster.activity.SettingsActivity.class);
             startActivity(intent);
+
+            // Add smooth transition
+            if (getActivity() != null) {
+                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            }
         });
 
         ivNotification.setOnClickListener(v -> {
