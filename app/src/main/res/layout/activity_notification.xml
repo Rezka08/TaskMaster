@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:id="@+id/notification"
     android:background="?attr/backgroundColor">
@@ -53,14 +53,20 @@
 
     </LinearLayout>
 
-    <!-- Filter Tabs -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout_filter"
-        style="@style/CustomTabLayout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:background="?attr/surfaceColor">
+
+        <!-- Filter Tabs -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout_filter"
+            style="@style/CustomTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"/>
+    </LinearLayout>
 
     <!-- Content Section -->
     <LinearLayout
@@ -80,13 +86,16 @@
             android:layout_marginBottom="16dp" />
 
         <!-- Tasks RecyclerView -->
+
+        <!-- Empty State -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_notification_tasks"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_notification_task" />
 
-        <!-- Empty State -->
         <LinearLayout
             android:id="@+id/layout_empty_state"
             style="@style/EmptyStateStyle"

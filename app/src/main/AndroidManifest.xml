@@ -19,15 +19,23 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
 
-        <!-- Main Activity -->
+        <!-- Splash Activity -->
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.TaskMaster.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- Main Activity -->
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.TaskMaster.NoActionBar">
+            <!-- Removed launcher intent filter as it's now in SplashActivity -->
         </activity>
 
         <!-- Task Detail Activity -->

@@ -13,7 +13,6 @@ import com.example.taskmaster.R;
 import com.example.taskmaster.callback.DatabaseCallback;
 import com.example.taskmaster.model.Task;
 import com.example.taskmaster.model.Category;
-import com.example.taskmaster.utils.DateUtils;
 import com.example.taskmaster.utils.ThemeManager;
 import com.example.taskmaster.viewmodel.TaskViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -38,7 +37,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         themeManager.applyTheme();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_task_detail);
+        setContentView(R.layout.activity_task_detail);
 
         initViews();
         setupViewModel();
