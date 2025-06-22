@@ -35,10 +35,8 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Apply theme before setContentView
         themeManager = new ThemeManager(this);
         themeManager.applyTheme();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.detail), (v, insets) -> {
@@ -55,7 +53,6 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     private void initViews() {
         ivBack = findViewById(R.id.iv_back);
-        ivDelete = findViewById(R.id.iv_delete);
         tvTaskName = findViewById(R.id.tv_task_name);
         tvTaskDate = findViewById(R.id.tv_task_date);
         tvStartTime = findViewById(R.id.tv_start_time);
@@ -72,14 +69,12 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void setupClickListeners() {
         ivBack.setOnClickListener(v -> finish());
 
-        ivDelete.setOnClickListener(v -> showDeleteConfirmation());
-
         btnEditTask.setOnClickListener(v -> {
             if (currentTask != null) {
-                // Navigate to MainActivity with edit mode
+                // KIRIM FLAG BARU UNTUK EDIT
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("edit_task_id", currentTask.getId());
-                intent.putExtra("navigate_to", "add_task");
+                intent.putExtra("navigate_to", "edit_task"); // Flag baru
+                intent.putExtra("task_id", currentTask.getId());
                 startActivity(intent);
                 finish();
             }
@@ -108,7 +103,6 @@ public class TaskDetailActivity extends AppCompatActivity {
                     }
                 });
             }
-
             @Override
             public void onError(String error) {
                 runOnUiThread(() -> {
@@ -119,117 +113,37 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
+    // ... (sisa method seperti populateViews, formatTime, loadCategoryName tetap sama)
+
     private void populateViews(Task task) {
         tvTaskName.setText(task.getTitle());
         tvDescription.setText(task.getDescription());
-
-        // Format date display
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-            Date date = inputFormat.parse(task.getDate());
-            tvTaskDate.setText(outputFormat.format(date));
-        } catch (Exception e) {
-            tvTaskDate.setText(task.getDate());
-        }
-
-        // Format time display
-        tvStartTime.setText(formatTime(task.getStartTime()));
-        tvEndTime.setText(formatTime(task.getEndTime()));
-    }
-
-    private String formatTime(String time) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-            Date timeDate = inputFormat.parse(time);
-            return outputFormat.format(timeDate);
-        } catch (Exception e) {
-            return time;
-        }
+        tvTaskDate.setText(task.getDate());
+        tvStartTime.setText(task.getStartTime());
+        tvEndTime.setText(task.getEndTime());
     }
 
     private void loadCategoryName(int categoryId) {
         taskViewModel.getCategoryById(categoryId, new DatabaseCallback<Category>() {
             @Override
             public void onSuccess(Category category) {
-                runOnUiThread(() -> {
-                    if (category != null) {
-                        tvCategory.setText(category.getName());
-                    } else {
-                        tvCategory.setText("Unknown Category");
-                    }
-                });
+                if (category != null) {
+                    tvCategory.setText(category.getName());
+                } else {
+                    tvCategory.setText("Uncategorized");
+                }
             }
-
             @Override
             public void onError(String error) {
-                runOnUiThread(() -> {
-                    tvCategory.setText("Unknown Category");
-                });
+                tvCategory.setText("Uncategorized");
             }
         });
     }
 
-    private void showDeleteConfirmation() {
-        if (currentTask == null) return;
-
-        // Create AlertDialog with theme-aware styling
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("Delete Task")
-                .setMessage("Are you sure you want to delete \"" + currentTask.getTitle() + "\"? This action cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> deleteTask())
-                .setNegativeButton("Cancel", null)
-                .setIcon(android.R.drawable.ic_dialog_alert);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void deleteTask() {
-        if (currentTask == null) return;
-
-        taskViewModel.delete(currentTask, new DatabaseCallback<Integer>() {
-            @Override
-            public void onSuccess(Integer rowsDeleted) {
-                runOnUiThread(() -> {
-                    if (rowsDeleted > 0) {
-                        Toast.makeText(TaskDetailActivity.this, "Task deleted successfully", Toast.LENGTH_SHORT).show();
-
-                        // Set result to notify calling activity about data change
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("data_changed", true);
-                        setResult(RESULT_OK, resultIntent);
-                        finish();
-                    } else {
-                        Toast.makeText(TaskDetailActivity.this, "Failed to delete task", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(String error) {
-                runOnUiThread(() -> {
-                    Toast.makeText(TaskDetailActivity.this, "Error deleting task: " + error, Toast.LENGTH_SHORT).show();
-                });
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Reload task data in case it was updated
-        if (currentTask != null) {
-            loadTaskData();
-        }
-    }
 
     @Override
     public void finish() {
         super.finish();
-        // Add smooth transition
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }
