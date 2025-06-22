@@ -39,7 +39,7 @@
   - Tanggal (date picker)
   - Waktu mulai-selesai (time picker)
   - Deskripsi
-  - Kategori tugas (dropdown selection)
+  - Kategori tugas
 - Edit mode untuk memodifikasi tugas yang sudah ada
 - Prioritas otomatis berdasarkan tanggal yang dipilih
 
@@ -236,7 +236,7 @@ Pengguna ingin mencari tugas tertentu dan melihat kapan jadwalnya tanpa harus me
 ### Langkah Instalasi
 1. Clone repository ini:
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/Rezka08/ProjectMobile04.git
    ```
 
 2. Buka project di Android Studio
@@ -289,11 +289,10 @@ Kami menyambut kontribusi untuk pengembangan TaskMaster! Silakan:
 
 ## 👥 Tim Pengembang
 
-- Rezka Wildan Nurhadi Bakri 
-- Restu Ahmadinata
-- Cholyn Sharon Enos
-- Dhian Alifka Azzahra
-- A. Syaifullah Aksa
+- Rezka Wildan Nurhadi Bakri  H071231030
+- Restu Ahmadinata            H071231021
+- Cholyn Sharon Enos          H071231040
+- Dhian Alifka Azzahra        H071231022
 
 ---
 
