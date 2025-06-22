@@ -1,5 +1,7 @@
 package com.example.taskmaster.model;
 
+import com.example.taskmaster.utils.PriorityUtils;
+
 public class Task {
     private int id;
     private String title;
@@ -16,7 +18,7 @@ public class Task {
     // Default constructor
     public Task() {}
 
-    // Constructor
+    // Constructor untuk membuat task baru
     public Task(String title, String description, String date, String startTime,
                 String endTime, int categoryId) {
         this.title = title;
@@ -28,6 +30,8 @@ public class Task {
         this.isCompleted = false;
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
+        // PERBAIKAN: Hitung prioritas secara otomatis saat objek dibuat
+        this.priority = PriorityUtils.calculatePriority(date);
     }
 
     // Constructor with ID (for database retrieval)

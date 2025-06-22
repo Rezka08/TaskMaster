@@ -14,227 +14,79 @@ import com.example.taskmaster.repository.TaskRepository;
 import java.util.List;
 
 public class TaskViewModel extends AndroidViewModel {
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
     public TaskViewModel(@NonNull Application application) {
         super(application);
-        taskRepository = new TaskRepository(application);
+        // PERBAIKAN: Gunakan instance singleton dari TaskRepository
+        taskRepository = TaskRepository.getInstance(application);
     }
 
     // ====================== TASK OPERATIONS ======================
 
-    /**
-     * Insert a new task
-     */
     public void insert(Task task, DatabaseCallback<Long> callback) {
-        if (taskRepository != null) {
-            taskRepository.insert(task, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.insert(task, callback);
     }
 
-    /**
-     * Update an existing task
-     */
     public void update(Task task, DatabaseCallback<Integer> callback) {
-        if (taskRepository != null) {
-            taskRepository.update(task, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.update(task, callback);
     }
 
-    /**
-     * Delete a task
-     */
     public void delete(Task task, DatabaseCallback<Integer> callback) {
-        if (taskRepository != null) {
-            taskRepository.delete(task, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.delete(task, callback);
     }
 
-    /**
-     * Get task by ID
-     */
     public void getTaskById(int taskId, DatabaseCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.getTaskById(taskId, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getTaskById(taskId, callback);
     }
 
-    /**
-     * Get all tasks
-     */
     public void getAllTasks(DatabaseListCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.getAllTasks(callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getAllTasks(callback);
     }
 
-    /**
-     * Get tasks by date
-     */
     public void getTasksByDate(String date, DatabaseListCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.getTasksByDate(date, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getTasksByDate(date, callback);
     }
 
-    /**
-     * Search tasks
-     */
     public void searchTasks(String query, DatabaseListCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.searchTasks(query, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.searchTasks(query, callback);
     }
 
     // ====================== TASK COUNTS ======================
 
-    /**
-     * Get count of completed tasks only
-     */
-    public void getCompletedTasksCount(DatabaseCountCallback callback) {
-        if (taskRepository != null) {
-            taskRepository.getCompletedTasksCount(callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
-    }
-
-    /**
-     * Get count of completed and overdue tasks
-     * This method properly counts both completed tasks and overdue tasks
-     */
     public void getCompletedAndOverdueTasksCount(String currentDate, DatabaseCountCallback callback) {
-        if (taskRepository != null) {
-            taskRepository.getCompletedAndOverdueTasksCount(currentDate, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getCompletedAndOverdueTasksCount(currentDate, callback);
     }
 
-    /**
-     * Get count of upcoming tasks (future tasks that are not completed)
-     */
     public void getUpcomingTasksCount(String currentDate, DatabaseCountCallback callback) {
-        if (taskRepository != null) {
-            taskRepository.getUpcomingTasksCount(currentDate, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getUpcomingTasksCount(currentDate, callback);
     }
 
-    /**
-     * Get count of in progress tasks (today's tasks that are not completed)
-     */
     public void getInProgressTasksCount(String currentDate, DatabaseCountCallback callback) {
-        if (taskRepository != null) {
-            taskRepository.getInProgressTasksCount(currentDate, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getInProgressTasksCount(currentDate, callback);
     }
 
     // ====================== TASK LISTS ======================
 
-    /**
-     * Get list of upcoming tasks
-     */
     public void getUpcomingTasks(String currentDate, DatabaseListCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.getUpcomingTasks(currentDate, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getUpcomingTasks(currentDate, callback);
     }
 
-    /**
-     * Get list of in progress tasks (today's tasks)
-     */
     public void getInProgressTasks(String currentDate, DatabaseListCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.getInProgressTasks(currentDate, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getInProgressTasks(currentDate, callback);
     }
 
-    /**
-     * Get list of completed tasks
-     */
     public void getCompletedTasks(DatabaseListCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.getCompletedTasks(callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
-    }
-
-    /**
-     * Get today's tasks for widget
-     */
-    public void getTodayTasksForWidget(String currentDate, DatabaseListCallback<Task> callback) {
-        if (taskRepository != null) {
-            taskRepository.getTodayTasksForWidget(currentDate, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getCompletedTasks(callback);
     }
 
     // ====================== CATEGORY OPERATIONS ======================
 
-    /**
-     * Get all categories
-     */
     public void getAllCategories(DatabaseListCallback<Category> callback) {
-        if (taskRepository != null) {
-            taskRepository.getAllCategories(callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
+        taskRepository.getAllCategories(callback);
     }
 
-    /**
-     * Get category by ID
-     */
     public void getCategoryById(int categoryId, DatabaseCallback<Category> callback) {
-        if (taskRepository != null) {
-            taskRepository.getCategoryById(categoryId, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
-    }
-
-    /**
-     * Insert a new category
-     */
-    public void insertCategory(Category category, DatabaseCallback<Long> callback) {
-        if (taskRepository != null) {
-            taskRepository.insertCategory(category, callback);
-        } else {
-            callback.onError("Repository not initialized");
-        }
-    }
-
-    // ====================== CLEANUP ======================
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if (taskRepository != null) {
-            taskRepository.cleanup();
-        }
+        taskRepository.getCategoryById(categoryId, callback);
     }
 }

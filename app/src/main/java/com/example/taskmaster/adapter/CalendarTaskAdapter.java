@@ -107,7 +107,7 @@ public class CalendarTaskAdapter extends RecyclerView.Adapter<CalendarTaskAdapte
             }
 
             // Set background color based on priority
-            int priorityColor = PriorityUtils.getPriorityColor(task.getPriority());
+            int priorityColor = PriorityUtils.getPriorityColor(itemView.getContext(), task.getPriority());
             cvTaskItem.setCardBackgroundColor(priorityColor);
 
             // Set text colors based on priority

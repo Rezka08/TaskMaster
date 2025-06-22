@@ -1,6 +1,9 @@
 package com.example.taskmaster.utils;
 
+import android.content.Context;
 import android.graphics.Color;
+import androidx.core.content.ContextCompat;
+import com.example.taskmaster.R;
 
 public class PriorityUtils {
     public static final int PRIORITY_HIGH = 1;    // Red
@@ -10,25 +13,27 @@ public class PriorityUtils {
     public static int calculatePriority(String dateString) {
         long daysDiff = DateUtils.getDaysDifference(dateString);
 
-        if (daysDiff <= 1) {
-            return PRIORITY_HIGH;    // Today or tomorrow
-        } else if (daysDiff <= 3) {
-            return PRIORITY_MEDIUM;  // 2-3 days
+        if (daysDiff < 0) { // Lewat waktu
+            return PRIORITY_HIGH;
+        } else if (daysDiff <= 1) {
+            return PRIORITY_HIGH;    // Hari ini atau besok
+        } else if (daysDiff <= 4) {
+            return PRIORITY_MEDIUM;  // Dalam 2-4 hari
         } else {
-            return PRIORITY_LOW;     // 4+ days
+            return PRIORITY_LOW;     // 5+ hari
         }
     }
 
-    public static int getPriorityColor(int priority) {
+    public static int getPriorityColor(Context context, int priority) {
         switch (priority) {
             case PRIORITY_HIGH:
-                return Color.parseColor("#F44336"); // Red
+                return ContextCompat.getColor(context, R.color.priority_high); // Red
             case PRIORITY_MEDIUM:
-                return Color.parseColor("#FFC107"); // Yellow
+                return ContextCompat.getColor(context, R.color.priority_medium); // Yellow
             case PRIORITY_LOW:
-                return Color.parseColor("#4CAF50"); // Green
+                return ContextCompat.getColor(context, R.color.priority_low); // Green
             default:
-                return Color.parseColor("#9E9E9E"); // Gray
+                return ContextCompat.getColor(context, R.color.text_light_gray); // Gray
         }
     }
 

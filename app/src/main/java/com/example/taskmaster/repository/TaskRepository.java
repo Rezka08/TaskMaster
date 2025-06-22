@@ -1,5 +1,6 @@
 package com.example.taskmaster.repository;
 
+import android.app.Application;
 import android.content.Context;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,23 +16,32 @@ import com.example.taskmaster.model.Category;
 import com.example.taskmaster.model.Task;
 
 public class TaskRepository {
-    private TaskDao taskDao;
-    private CategoryDao categoryDao;
-    private ExecutorService executor;
-    private DatabaseHelper databaseHelper;
+    private static volatile TaskRepository instance;
+    private final TaskDao taskDao;
+    private final CategoryDao categoryDao;
+    private final ExecutorService executor;
 
-    public TaskRepository(Context context) {
-        databaseHelper = DatabaseHelper.getInstance(context);
+    private TaskRepository(Application application) {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(application);
         taskDao = new TaskDao(databaseHelper);
         categoryDao = new CategoryDao(databaseHelper);
-        executor = Executors.newSingleThreadExecutor(); // Use single thread to avoid conflicts
+        executor = Executors.newSingleThreadExecutor();
     }
+
+    public static TaskRepository getInstance(Application application) {
+        if (instance == null) {
+            synchronized (TaskRepository.class) {
+                if (instance == null) {
+                    instance = new TaskRepository(application);
+                }
+            }
+        }
+        return instance;
+    }
+
 
     // ====================== TASK OPERATIONS ======================
 
-    /**
-     * Insert a new task
-     */
     public void insert(Task task, DatabaseCallback<Long> callback) {
         executor.execute(() -> {
             try {
@@ -43,9 +53,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Update an existing task
-     */
     public void update(Task task, DatabaseCallback<Integer> callback) {
         executor.execute(() -> {
             try {
@@ -57,9 +64,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Delete a task
-     */
     public void delete(Task task, DatabaseCallback<Integer> callback) {
         executor.execute(() -> {
             try {
@@ -71,9 +75,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Get task by ID
-     */
     public void getTaskById(int taskId, DatabaseCallback<Task> callback) {
         executor.execute(() -> {
             try {
@@ -85,9 +86,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Get all tasks
-     */
     public void getAllTasks(DatabaseListCallback<Task> callback) {
         executor.execute(() -> {
             try {
@@ -99,9 +97,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Get tasks by date
-     */
     public void getTasksByDate(String date, DatabaseListCallback<Task> callback) {
         executor.execute(() -> {
             try {
@@ -113,9 +108,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Search tasks
-     */
     public void searchTasks(String query, DatabaseListCallback<Task> callback) {
         executor.execute(() -> {
             try {
@@ -129,56 +121,33 @@ public class TaskRepository {
 
     // ====================== TASK COUNTS ======================
 
-    /**
-     * Get count of completed tasks only
-     */
-    public void getCompletedTasksCount(DatabaseCountCallback callback) {
-        executor.execute(() -> {
-            try {
-                int count = taskDao.getCompletedTasksCount();
-                callback.onSuccess(count);
-            } catch (Exception e) {
-                callback.onError(e.getMessage());
-            }
-        });
-    }
-
-    /**
-     * Get count of completed and overdue tasks with callback
-     */
     public void getCompletedAndOverdueTasksCount(String currentDate, DatabaseCountCallback callback) {
         executor.execute(() -> {
             try {
-                int count = taskDao.getCompletedAndOverdueTasksCount(currentDate);
-                callback.onSuccess(count);
+                long count = taskDao.getCompletedAndOverdueTasksCount(currentDate);
+                callback.onSuccess((int) count);
             } catch (Exception e) {
                 callback.onError(e.getMessage());
             }
         });
     }
 
-    /**
-     * Get count of upcoming tasks with callback
-     */
     public void getUpcomingTasksCount(String currentDate, DatabaseCountCallback callback) {
         executor.execute(() -> {
             try {
-                int count = taskDao.getUpcomingTasksCount(currentDate);
-                callback.onSuccess(count);
+                long count = taskDao.getUpcomingTasksCount(currentDate);
+                callback.onSuccess((int) count);
             } catch (Exception e) {
                 callback.onError(e.getMessage());
             }
         });
     }
 
-    /**
-     * Get count of in progress tasks with callback
-     */
     public void getInProgressTasksCount(String currentDate, DatabaseCountCallback callback) {
         executor.execute(() -> {
             try {
-                int count = taskDao.getInProgressTasksCount(currentDate);
-                callback.onSuccess(count);
+                long count = taskDao.getInProgressTasksCount(currentDate);
+                callback.onSuccess((int) count);
             } catch (Exception e) {
                 callback.onError(e.getMessage());
             }
@@ -187,9 +156,6 @@ public class TaskRepository {
 
     // ====================== TASK LISTS ======================
 
-    /**
-     * Get list of upcoming tasks with callback
-     */
     public void getUpcomingTasks(String currentDate, DatabaseListCallback<Task> callback) {
         executor.execute(() -> {
             try {
@@ -201,9 +167,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Get list of in progress tasks with callback
-     */
     public void getInProgressTasks(String currentDate, DatabaseListCallback<Task> callback) {
         executor.execute(() -> {
             try {
@@ -215,9 +178,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Get list of completed tasks with callback
-     */
     public void getCompletedTasks(DatabaseListCallback<Task> callback) {
         executor.execute(() -> {
             try {
@@ -229,25 +189,8 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Get today's tasks for widget
-     */
-    public void getTodayTasksForWidget(String currentDate, DatabaseListCallback<Task> callback) {
-        executor.execute(() -> {
-            try {
-                List<Task> tasks = taskDao.getTodayTasksForWidget(currentDate);
-                callback.onSuccess(tasks);
-            } catch (Exception e) {
-                callback.onError(e.getMessage());
-            }
-        });
-    }
-
     // ====================== CATEGORY OPERATIONS ======================
 
-    /**
-     * Get all categories
-     */
     public void getAllCategories(DatabaseListCallback<Category> callback) {
         executor.execute(() -> {
             try {
@@ -259,9 +202,6 @@ public class TaskRepository {
         });
     }
 
-    /**
-     * Get category by ID
-     */
     public void getCategoryById(int categoryId, DatabaseCallback<Category> callback) {
         executor.execute(() -> {
             try {
@@ -271,30 +211,5 @@ public class TaskRepository {
                 callback.onError(e.getMessage());
             }
         });
-    }
-
-    /**
-     * Insert a new category
-     */
-    public void insertCategory(Category category, DatabaseCallback<Long> callback) {
-        executor.execute(() -> {
-            try {
-                long id = categoryDao.insert(category);
-                callback.onSuccess(id);
-            } catch (Exception e) {
-                callback.onError(e.getMessage());
-            }
-        });
-    }
-
-    // ====================== CLEANUP ======================
-
-    /**
-     * Cleanup resources
-     */
-    public void cleanup() {
-        if (executor != null && !executor.isShutdown()) {
-            executor.shutdown();
-        }
     }
 }

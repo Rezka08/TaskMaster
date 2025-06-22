@@ -50,12 +50,16 @@ public class TaskWidgetProvider extends AppWidgetProvider {
     }
 
     private void loadTodayTasks(Context context, RemoteViews views, AppWidgetManager appWidgetManager, int appWidgetId) {
-        TaskRepository repository = new TaskRepository(context);
+        // PERBAIKAN: Dapatkan instance singleton dari repository
+        TaskRepository repository = TaskRepository.getInstance((android.app.Application) context.getApplicationContext());
         String currentDate = DateUtils.getCurrentDate();
 
-        repository.getTodayTasksForWidget(currentDate, new DatabaseListCallback<Task>() {
+        // Tidak ada metode getTodayTasksForWidget di TaskRepository yang diperbarui,
+        // jadi kita akan menggunakan getInProgressTasks
+        repository.getInProgressTasks(currentDate, new DatabaseListCallback<Task>() {
             @Override
             public void onSuccess(List<Task> tasks) {
+                // Pastikan untuk menjalankan di UI thread jika diperlukan, meskipun untuk widget tidak selalu
                 updateWidgetWithTasks(context, views, appWidgetManager, appWidgetId, tasks);
             }
 
@@ -65,6 +69,7 @@ public class TaskWidgetProvider extends AppWidgetProvider {
             }
         });
     }
+
 
     private void updateWidgetWithTasks(Context context, RemoteViews views, AppWidgetManager appWidgetManager, int appWidgetId, List<Task> tasks) {
         if (tasks == null || tasks.isEmpty()) {
@@ -79,12 +84,12 @@ public class TaskWidgetProvider extends AppWidgetProvider {
         // Show up to 2 most important tasks
         for (int i = 0; i < Math.min(tasks.size(), 2); i++) {
             Task task = tasks.get(i);
-            updateTaskView(views, task, i + 1);
+            updateTaskView(context, views, task, i + 1);
         }
 
         // Hide unused task views
         for (int i = tasks.size(); i < 2; i++) {
-            hideTaskView(views, i + 1);
+            hideTaskView(views, i + 1, context);
         }
 
         // Update the widget
@@ -104,14 +109,14 @@ public class TaskWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    private void updateTaskView(RemoteViews views, Task task, int taskNumber) {
+    private void updateTaskView(Context context, RemoteViews views, Task task, int taskNumber) {
         String taskLayoutId = "widget_task_" + taskNumber;
         String titleId = "widget_task_title_" + taskNumber;
         String timeId = "widget_task_time_" + taskNumber;
 
-        int taskLayoutResId = getResourceId(taskLayoutId);
-        int titleResId = getResourceId(titleId);
-        int timeResId = getResourceId(timeId);
+        int taskLayoutResId = getResourceId(context, taskLayoutId);
+        int titleResId = getResourceId(context, titleId);
+        int timeResId = getResourceId(context, timeId);
 
         if (taskLayoutResId != 0 && titleResId != 0 && timeResId != 0) {
             views.setViewVisibility(taskLayoutResId, View.VISIBLE);
@@ -133,23 +138,23 @@ public class TaskWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(timeResId, timeText);
 
             // Set background based on priority
-            int backgroundColor = PriorityUtils.getPriorityColor(task.getPriority());
+            int backgroundColor = PriorityUtils.getPriorityColor(context, task.getPriority());
             views.setInt(taskLayoutResId, "setBackgroundColor", backgroundColor);
         }
     }
 
-    private void hideTaskView(RemoteViews views, int taskNumber) {
+    private void hideTaskView(RemoteViews views, int taskNumber, Context context) {
         String taskLayoutId = "widget_task_" + taskNumber;
-        int taskLayoutResId = getResourceId(taskLayoutId);
+        int taskLayoutResId = getResourceId(context, taskLayoutId);
 
         if (taskLayoutResId != 0) {
             views.setViewVisibility(taskLayoutResId, View.GONE);
         }
     }
 
-    private int getResourceId(String resourceName) {
+    private int getResourceId(Context context, String resourceName) {
         try {
-            return R.id.class.getField(resourceName).getInt(null);
+            return context.getResources().getIdentifier(resourceName, "id", context.getPackageName());
         } catch (Exception e) {
             return 0;
         }
