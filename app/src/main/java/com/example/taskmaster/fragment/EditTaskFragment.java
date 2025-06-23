@@ -29,6 +29,7 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class EditTaskFragment extends Fragment {
     private TaskViewModel taskViewModel;
@@ -167,13 +168,59 @@ public class EditTaskFragment extends Fragment {
     }
 
     private void showDatePicker() {
-        // ... (Implement DatePickerDialog as in AddTaskFragment)
+        // Gunakan Calendar untuk mendapatkan tanggal saat ini sebagai default
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        // Buat DatePickerDialog baru
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getContext(),
+                (view, year1, monthOfYear, dayOfMonth) -> {
+                    // Format tanggal yang dipilih menjadi YYYY-MM-DD
+                    selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year1, monthOfYear + 1, dayOfMonth);
+                    // Set teks pada TextView
+                    tvTaskDate.setText(selectedDate);
+                },
+                year, month, day);
+        datePickerDialog.show();
     }
     private void showStartTimePicker() {
-        // ... (Implement TimePickerDialog as in AddTaskFragment)
+        // Gunakan Calendar untuk mendapatkan waktu saat ini sebagai default
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        // Buat TimePickerDialog baru
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                getContext(),
+                (view, hourOfDay, minuteOfHour) -> {
+                    // Format waktu yang dipilih menjadi HH:MM
+                    selectedStartTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minuteOfHour);
+                    // Set teks pada TextView
+                    tvStartTime.setText(selectedStartTime);
+                },
+                hour, minute, true); // true untuk format 24 jam
+        timePickerDialog.show();
     }
     private void showEndTimePicker() {
-        // ... (Implement TimePickerDialog as in AddTaskFragment)
+        // Gunakan Calendar untuk mendapatkan waktu saat ini sebagai default
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        // Buat TimePickerDialog baru
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                getContext(),
+                (view, hourOfDay, minuteOfHour) -> {
+                    // Format waktu yang dipilih menjadi HH:MM
+                    selectedEndTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minuteOfHour);
+                    // Set teks pada TextView
+                    tvEndTime.setText(selectedEndTime);
+                },
+                hour, minute, true); // true untuk format 24 jam
+        timePickerDialog.show();
     }
 
     private void saveTask() {
